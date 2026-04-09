@@ -7,10 +7,10 @@ export const metadata = {
 
 export default function RegisterPage() {
   return (
-    <CloudBackground>
-      <div className="flex items-center justify-center min-h-screen px-4">
+     
+      <div className="flex -mt-30 items-center justify-center min-h-screen px-4">
         <RegisterForm />
       </div>
-    </CloudBackground>
+  
   );
 }

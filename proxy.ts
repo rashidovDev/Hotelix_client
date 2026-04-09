@@ -1,32 +1,32 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Routes that require authentication
-const protectedRoutes = [
-  "/dashboard",
-  "/dashboard/bookings",
-  "/dashboard/profile",
-  "/dashboard/reviews",
-  "/book",
-];
+const protectedRoutes = ["/dashboard", "/book"];
+const adminRoutes = ["/admin"];
+const authRoutes = ["/auth/login", "/auth/register"];
 
-// Routes that require HOST or ADMIN role
-const hostRoutes = [
-  "/admin",
-  "/admin/hotels",
-];
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
 
-// Routes only for guests (not logged in)
-const authRoutes = [
-  "/auth/login",
-  "/auth/register",
-];
+    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+
+    const payload = JSON.parse(atob(padded));
+
+    if (!payload || typeof payload !== "object") return null;
+    return payload as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
 
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl; 
+  const { pathname } = request.nextUrl;
 
-  // Get token from zustand persisted storage via cookies
   const authStorage = request.cookies.get("hotelix-auth");
+  const refreshTokenCookie = request.cookies.get("refreshToken");
 
   let isAuthenticated = false;
   let userRole = "";
@@ -41,30 +41,48 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Redirect unauthenticated users away from protected routes
+  // Server sets auth state via HttpOnly refresh token cookie.
+  if (!isAuthenticated && refreshTokenCookie?.value) {
+    isAuthenticated = true;
+  }
+
+  // If role is not available in storage cookie, derive it from JWT payload.
+  if (!userRole && refreshTokenCookie?.value) {
+    const payload = decodeJwtPayload(refreshTokenCookie.value);
+    if (typeof payload?.role === "string") {
+      userRole = payload.role;
+    }
+  }
+
+  // Unauthenticated → login
   const isProtected = protectedRoutes.some((route) =>
     pathname.startsWith(route)
-  ); 
-
+  );
   if (isProtected && !isAuthenticated) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
-  // Redirect non-host/admin users away from admin routes
-  const isHostRoute = hostRoutes.some((route) =>
+  // ADMIN tries /dashboard → /admin
+  if (pathname.startsWith("/dashboard") && userRole === "ADMIN") {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
+  // GUEST/HOST tries /admin → /dashboard
+  const isAdminRoute = adminRoutes.some((route) =>
     pathname.startsWith(route)
   );
-
-  if (isHostRoute && !["HOST", "ADMIN"].includes(userRole)) {
+  if (isAdminRoute && userRole !== "ADMIN") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Redirect authenticated users away from auth pages
+  // Already logged in tries auth pages
   const isAuthRoute = authRoutes.some((route) =>
     pathname.startsWith(route)
   );
-
   if (isAuthRoute && isAuthenticated) {
+    if (userRole === "ADMIN") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
@@ -79,11 +97,3 @@ export const config = {
     "/auth/:path*",
   ],
 };
-
-
-// Your route protection now works like this:
-
-// /dashboard/*     → must be logged in
-// /admin/*         → must be HOST or ADMIN
-// /book/*          → must be logged in
-// /auth/*          → redirects to /dashboard if already logged in

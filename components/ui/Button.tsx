@@ -16,7 +16,7 @@ export default function Button({
     <button
       {...props}
       disabled={loading || props.disabled}
-      className={`w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2
+      className={`w-full bg-red z-50 py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2
         ${variant === "primary"
           ? "bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-60"
           : "border border-gray-200 hover:bg-gray-50 text-gray-700"

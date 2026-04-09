@@ -13,12 +13,13 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: string; output: string; }
+  Upload: { input: File; output: File; }
 };
 
 export type AuthResponse = {
   __typename?: 'AuthResponse';
   accessToken: Scalars['String']['output'];
-  refreshToken: Scalars['String']['output'];
+  user: UserEntity;
 };
 
 export type BookingEntity = {
@@ -102,14 +103,20 @@ export type Mutation = {
   createReview: ReviewEntity;
   createRoom: RoomEntity;
   login: AuthResponse;
+  logout: Scalars['Boolean']['output'];
+  refreshTokens: AuthResponse;
   register: AuthResponse;
   removeHotel: HotelEntity;
   removeReview: Scalars['Boolean']['output'];
   removeRoom: Scalars['Boolean']['output'];
   removeUser: Scalars['Boolean']['output'];
+  updateAvatar: UserEntity;
   updateHotel: HotelEntity;
   updateRoom: RoomEntity;
   updateUser: UserEntity;
+  uploadAvatar: Scalars['String']['output'];
+  uploadImage: Scalars['String']['output'];
+  uploadImages: Array<Scalars['String']['output']>;
 };
 
 
@@ -174,6 +181,11 @@ export type MutationUpdateHotelArgs = {
 };
 
 
+export type MutationUpdateAvatarArgs = {
+  avatarUrl: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateRoomArgs = {
   id: Scalars['String']['input'];
   input: UpdateRoomInput;
@@ -183,6 +195,21 @@ export type MutationUpdateRoomArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['String']['input'];
   input: UpdateUserInput;
+};
+
+
+export type MutationUploadAvatarArgs = {
+  file: Scalars['Upload']['input'];
+};
+
+
+export type MutationUploadImageArgs = {
+  file: Scalars['Upload']['input'];
+};
+
+
+export type MutationUploadImagesArgs = {
+  files: Array<Scalars['Upload']['input']>;
 };
 
 export type Query = {
@@ -196,6 +223,7 @@ export type Query = {
   findRoomsByHotel: Array<RoomEntity>;
   findUser: UserEntity;
   hotelReviews: Array<ReviewEntity>;
+  me: UserEntity;
   myBookings: Array<BookingEntity>;
   myHotels: Array<HotelEntity>;
   myReviews: Array<ReviewEntity>;
@@ -324,6 +352,7 @@ export type UpdateUserInput = {
 
 export type UserEntity = {
   __typename?: 'UserEntity';
+  avatar?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];

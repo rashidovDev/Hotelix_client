@@ -1,5 +1,8 @@
 import { gql } from "@apollo/client";
 
+
+
+
 // ── Hotels ──
 export const GET_ALL_HOTELS = gql`
   query FindAllHotels {
@@ -169,6 +172,22 @@ export const GET_MY_REVIEWS = gql`
 `;
 
 // ── Users ──
+
+export const GET_ME = gql`
+  query Me {
+    me {
+      id
+      firstName
+      lastName
+      email
+      role
+      avatar
+      createdAt
+    }
+  }
+`;
+
+
 export const GET_USER = gql`
   query FindUser($id: String!) {
     findUser(id: $id) {
@@ -177,6 +196,7 @@ export const GET_USER = gql`
       lastName
       email
       role
+      avatar
       createdAt
     }
   }
@@ -190,6 +210,7 @@ export const GET_ALL_USERS = gql`
       lastName
       email
       role
+      avatar
       createdAt
     }
   }

@@ -5,7 +5,13 @@ export const LOGIN = gql`
   mutation Login($input: LoginInput!) {
     login(input: $input) {
       accessToken
-      refreshToken
+      user {
+        id
+        firstName
+        lastName
+        email
+        role
+      }
     }
   }
 `;
@@ -14,8 +20,35 @@ export const REGISTER = gql`
   mutation Register($input: RegisterInput!) {
     register(input: $input) {
       accessToken
-      refreshToken
+      user {
+        id
+        firstName
+        lastName
+        email
+        role
+      }
     }
+  }
+`;
+
+export const REFRESH_TOKENS = gql`
+  mutation RefreshTokens {
+    refreshTokens {
+      accessToken
+      user {
+        id
+        firstName
+        lastName
+        email
+        role
+      }
+    }
+  }
+`;
+
+export const LOGOUT = gql`
+  mutation Logout {
+    logout
   }
 `;
 
@@ -140,7 +173,8 @@ export const REMOVE_REVIEW = gql`
   }
 `;
 
-// ── Users ──
+
+
 export const UPDATE_USER = gql`
   mutation UpdateUser($id: String!, $input: UpdateUserInput!) {
     updateUser(id: $id, input: $input) {
@@ -148,6 +182,21 @@ export const UPDATE_USER = gql`
       firstName
       lastName
       email
+      role
+      avatar
+    }
+  }
+`;
+
+export const UPDATE_AVATAR = gql`
+  mutation UpdateAvatar($avatarUrl: String!) {
+    updateAvatar(avatarUrl: $avatarUrl) {
+      id
+      firstName
+      lastName
+      email
+      role
+      avatar
     }
   }
 `;

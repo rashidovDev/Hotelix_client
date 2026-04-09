@@ -7,6 +7,9 @@ import { siteConfig } from "@/config/site";
 import "./globals.css";
 import CloudBackground from "@/components/ui/CloudBackground";
 import FeaturedHotels from "@/components/hotel/FeaturedHotels";
+import FeaturedTours from "@/components/tours/FeaturedTours";
+import FeaturedCars from "@/components/cars/FeaturedCars";
+import FeaturedGuides from "@/components/guides/FeaturedGuides";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -33,6 +36,9 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
           </CloudBackground>
           <FeaturedHotels />
+          <FeaturedTours />
+          <FeaturedCars />
+          <FeaturedGuides />
           <Footer />
         </ApolloClientProvider>
       </body>

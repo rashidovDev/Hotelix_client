@@ -11,13 +11,13 @@ export const CloudBackground: React.FC<CloudBackgroundProps> = ({ children }) =>
   ];
 
   return (
-    <div className="relative w-full h-[75vh] overflow-hidden bg-gradient-to-b from-[#51a3f5] via-[#9ac0e8] to-[#e6d9cd]">
+    <div className="relative w-full h-[45vh] overflow-hidden bg-linear-to-b from-[#2b8ff3] via-[#2583e8] to-[#74b0f1]">
       {/* Clouds layer */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {clouds.map((cloud, index) => (
           <div 
           key={index + 1}
-          className="w-full absolute top-[40%] flex justify-between"
+          className="w-full absolute top-[50%] flex justify-between"
   style={{
     animation: "floatDown 12s ease-in-out infinite",
   }}>   
@@ -26,7 +26,7 @@ export const CloudBackground: React.FC<CloudBackgroundProps> = ({ children }) =>
               alt="cloud"
               width={cloud.width}
               height={Math.round(cloud.width * 0.5)}
-              className="opacity-30 -ml-40"
+              className="opacity-70 -ml-40"
               loading="eager"
               priority
             />
@@ -35,7 +35,7 @@ export const CloudBackground: React.FC<CloudBackgroundProps> = ({ children }) =>
               alt="cloud"
               width={cloud.width}
               height={Math.round(cloud.width * 0.5)}
-              className="opacity-30  -mr-50"
+              className="opacity-70  -mr-50"
               loading="eager"
               priority
             />

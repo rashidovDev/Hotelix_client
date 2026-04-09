@@ -1,17 +1,15 @@
+"use client";
+
 import { useMutation } from "@apollo/client/react";
 import { useAuthStore } from "@/store/authStore";
-import { LOGIN, REGISTER } from "@/lib/graphql/mutations";
-import { LoginInput, RegisterInput, AuthResponse } from "@/types";
+import { LOGIN, REGISTER, LOGOUT } from "@/lib/graphql/mutations";
+import { AuthResponse, LoginInput, RegisterInput } from "@/types";
 import { useRouter } from "next/navigation";
+import { routes } from "@/config/routes";
 
-// Define response types
-interface LoginMutationResponse {
-  login: AuthResponse;
-}
-
-interface RegisterMutationResponse {
-  register: AuthResponse;
-}
+interface LoginMutationResponse { login: AuthResponse; }
+interface RegisterMutationResponse { register: AuthResponse; }
+interface LogoutMutationResponse { logout: boolean; }
 
 export const useAuth = () => {
   const { setAuth, clearAuth, isAuthenticated, user } = useAuthStore();
@@ -23,35 +21,43 @@ export const useAuth = () => {
   const [registerMutation, { loading: registerLoading }] =
     useMutation<RegisterMutationResponse>(REGISTER);
 
-  const login = async (input: LoginInput) => {
-    try {
-      const { data } = await loginMutation({ variables: { input } });
-      if (data?.login) {
-        const { accessToken, refreshToken } = data.login;
-        setAuth(user!, accessToken, refreshToken);
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
+  const [logoutMutation] = useMutation<LogoutMutationResponse>(LOGOUT);
 
-  const register = async (input: RegisterInput) => {
-    try {
-      const { data } = await registerMutation({ variables: { input } });
-      if (data?.register) {
-        const { accessToken, refreshToken } = data.register;
-        setAuth(user!, accessToken, refreshToken);
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      throw error;
+ const login = async (input: LoginInput) => {
+  try {
+    const { data } = await loginMutation({ variables: { input } });
+    if (data?.login) {
+      const { accessToken, user } = data.login;
+      setAuth(user, accessToken);
+      router.push(routes.dashboard); // always dashboard
     }
-  };
+  } catch (error) {
+    throw error;
+  }
+};
 
-  const logout = () => {
-    clearAuth();
-    router.push("/");
+const register = async (input: RegisterInput) => {
+  try {
+    const { data } = await registerMutation({ variables: { input } });
+    if (data?.register) {
+      const { accessToken, user } = data.register;
+      setAuth(user, accessToken);
+      router.push(routes.dashboard); // always dashboard
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+  const logout = async () => {
+    try {
+      await logoutMutation();
+    } catch {
+      // ignore
+    } finally {
+      clearAuth();
+      router.push("/");
+    }
   };
 
   return {

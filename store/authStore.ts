@@ -5,9 +5,9 @@ import { UserEntity } from "@/types";
 interface AuthState {
   user: UserEntity | null;
   accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: UserEntity, accessToken: string, refreshToken: string) => void;
+  setAuth: (user: UserEntity, accessToken: string) => void;
+  updateUser: (user: UserEntity) => void;
   clearAuth: () => void;
 }
 
@@ -16,22 +16,13 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       accessToken: null,
-      refreshToken: null,
       isAuthenticated: false,
-
-      setAuth: (user, accessToken, refreshToken) =>
-        set({ user, accessToken, refreshToken, isAuthenticated: true }),
-
+      setAuth: (user, accessToken) =>
+        set({ user, accessToken, isAuthenticated: true }),
+      updateUser: (user) => set((state) => ({ ...state, user })),
       clearAuth: () =>
-        set({
-          user: null,
-          accessToken: null,
-          refreshToken: null,
-          isAuthenticated: false,
-        }),
+        set({ user: null, accessToken: null, isAuthenticated: false }),
     }),
-    {
-      name: "hotelix-auth",
-    }
+    { name: "hotelix-auth" }
   )
 );

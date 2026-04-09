@@ -3,26 +3,25 @@ export const routes = {
   home: "/",
   search: "/search",
   hotel: (id: string) => `/hotels/${id}`,
+  about: "/about",
+  guides: "/guides",
+  contact: "/contact",
+  destinations: "/destinations",
 
   // Booking
   book: (id: string) => `/book/${id}`,
-  bookingConfirmation: (id: string) => `/booking/confirmation/${id}`,
 
   // Auth
   login: "/auth/login",
   register: "/auth/register",
 
-  // Protected
+  // Dashboard (GUEST + HOST)
   dashboard: "/dashboard",
-  dashboardBookings: "/dashboard/bookings",
   dashboardProfile: "/dashboard/profile",
+  dashboardBookings: "/dashboard/bookings",
   dashboardReviews: "/dashboard/reviews",
+  dashboardHotels: "/dashboard/hotels",
 
-  // Admin / Host
+  // Admin (separate UI)
   admin: "/admin",
-  adminHotels: "/admin/hotels",
-  adminHotelCreate: "/admin/hotels/create",
-  adminHotelEdit: (id: string) => `/admin/hotels/${id}/edit`,
-  adminRooms: (hotelId: string) => `/admin/hotels/${hotelId}/rooms`,
-  adminRoomCreate: (hotelId: string) => `/admin/hotels/${hotelId}/rooms/create`,
 };
