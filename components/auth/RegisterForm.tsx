@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { routes } from "@/config/routes";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import { Role } from "@/types";
 
 export default function RegisterForm() {
   const { register, registerLoading } = useAuth();
@@ -16,6 +17,7 @@ export default function RegisterForm() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: Role.Guest,
   });
 
   const [errors, setErrors] = useState({
@@ -84,6 +86,7 @@ export default function RegisterForm() {
         lastName: form.lastName,
         email: form.email,
         password: form.password,
+        role: form.role,
       });
     } catch (error: any) {
       setErrors((prev) => ({
@@ -94,7 +97,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md flex flex-col gap-6">
+    <div className="bg-white rounded-3xl shadow-xl p-10 w-full max-w-lg flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-gray-800">Create account 🏨</h1>
@@ -160,6 +163,34 @@ export default function RegisterForm() {
           }
           error={errors.confirmPassword}
         />
+
+        <div className="flex flex-col gap-1 w-full">
+          <label className="text-sm font-medium text-gray-700">I am a</label>
+          <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-50 p-1">
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, role: Role.Guest })}
+              className={`rounded-lg py-2 text-sm font-medium transition-all ${
+                form.role === Role.Guest
+                  ? "bg-blue-600 text-white"
+                  : "bg-transparent text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Guest
+            </button>
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, role: Role.Host })}
+              className={`rounded-lg py-2 text-sm font-medium transition-all ${
+                form.role === Role.Host
+                  ? "bg-blue-600 text-white"
+                  : "bg-transparent text-gray-700 hover:bg-gray-100"
+              }`}
+            >
+              Host
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Submit */}

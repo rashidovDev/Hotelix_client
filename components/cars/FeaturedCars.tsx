@@ -80,7 +80,7 @@ export default function FeaturedCars() {
         <div className="mt-8 flex justify-center">
           <Link
             href={`${routes.search}?category=cars`}
-            className="inline-flex items-center rounded-xl border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-blue-600 hover:bg-blue-600"
+            className="inline-flex items-center rounded-xl border border-blue-500 px-5 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-600"
           >
             View all Cars
           </Link>

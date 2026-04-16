@@ -7,10 +7,10 @@ export const metadata = {
 
 export default function LoginPage() {
   return (
-   
-      <div className="flex -mt-30 items-center justify-center min-h-screen px-4">
+    <CloudBackground heightClassName="min-h-screen">
+      <div className="flex items-center justify-center min-h-screen px-4">
         <LoginForm />
       </div>
-  
+    </CloudBackground>
   );
 }

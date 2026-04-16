@@ -23,31 +23,41 @@ export const useAuth = () => {
 
   const [logoutMutation] = useMutation<LogoutMutationResponse>(LOGOUT);
 
- const login = async (input: LoginInput) => {
-  try {
-    const { data } = await loginMutation({ variables: { input } });
-    if (data?.login) {
-      const { accessToken, user } = data.login;
-      setAuth(user, accessToken);
-      router.push(routes.dashboard); // always dashboard
-    }
-  } catch (error) {
-    throw error;
-  }
-};
+  const login = async (input: LoginInput) => {
+    clearAuth();
 
-const register = async (input: RegisterInput) => {
-  try {
-    const { data } = await registerMutation({ variables: { input } });
-    if (data?.register) {
-      const { accessToken, user } = data.register;
-      setAuth(user, accessToken);
-      router.push(routes.dashboard); // always dashboard
+    try {
+      const { data } = await loginMutation({ variables: { input } });
+      const payload = data?.login;
+
+      if (!payload?.accessToken || !payload?.user?.id) {
+        throw new Error("Invalid login response");
+      }
+
+      setAuth(payload.user, payload.accessToken);
+      router.push(routes.dashboard);
+    } catch (error: any) {
+      const message = error?.message || "Login failed. Please try again.";
+      throw new Error(message);
     }
-  } catch (error) {
-    throw error;
-  }
-};
+  };
+
+  const register = async (input: RegisterInput) => {
+    try {
+      const { data } = await registerMutation({ variables: { input } });
+      const payload = data?.register;
+
+      if (!payload?.accessToken || !payload?.user?.id) {
+        throw new Error("Invalid register response");
+      }
+
+      setAuth(payload.user, payload.accessToken);
+      router.push(routes.dashboard);
+    } catch (error: any) {
+      const message = error?.message || "Registration failed. Please try again.";
+      throw new Error(message);
+    }
+  };
 
   const logout = async () => {
     try {

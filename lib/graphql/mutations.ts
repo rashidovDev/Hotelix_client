@@ -184,6 +184,8 @@ export const UPDATE_USER = gql`
       email
       role
       avatar
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -197,6 +199,8 @@ export const UPDATE_AVATAR = gql`
       email
       role
       avatar
+      createdAt
+      updatedAt
     }
   }
 `;

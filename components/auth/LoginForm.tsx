@@ -59,7 +59,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-md flex flex-col gap-6">
+    <div className="bg-white rounded-3xl shadow-xl p-10 w-full max-w-lg flex flex-col gap-6">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-gray-800">Welcome back 👋</h1>

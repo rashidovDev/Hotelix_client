@@ -59,19 +59,8 @@ const tours: TourItem[] = [
 
 export default function FeaturedTours() {
   return (
-    <section className="relative w-full overflow-hidden py-10">
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=1800&q=80')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
-      <div className="absolute inset-0 bg-linear-to-b from-white/30 via-white/20 to-white/35" />
-
-      <div className="relative mx-auto w-full rounded-3xl border border-white/60 bg-white/55 px-4 py-14 backdrop-blur-[3px] sm:px-6 lg:w-[70vw] lg:px-8">
+    <section className="w-full py-10">
+      <div className="mx-auto w-full px-4 py-14 sm:px-6 lg:w-[70vw] lg:px-8">
         <div className="mb-8 flex flex-col gap-2 sm:mb-10">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Recommended Tours
@@ -87,7 +76,7 @@ export default function FeaturedTours() {
         <div className="mt-8 flex justify-center">
           <Link
             href={routes.destinations}
-            className="inline-flex items-center rounded-xl border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-blue-600 hover:bg-blue-600"
+            className="inline-flex items-center rounded-xl border border-blue-500 px-5 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-600"
           >
             View all Tours
           </Link>

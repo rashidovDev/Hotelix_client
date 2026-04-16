@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useRef } from "react";
 import { useQuery } from "@apollo/client/react";
 import { GET_ALL_HOTELS } from "@/lib/graphql/queries";
 import { HotelEntity } from "@/types";
 import { routes } from "@/config/routes";
 import HotelCard from "./HotelCard";
+import { ChevronRight } from "lucide-react";
 
 interface GetAllHotelsResponse {
   findAllHotels: HotelEntity[];
@@ -13,66 +15,81 @@ interface GetAllHotelsResponse {
 
 export default function FeaturedHotels() {
   const { data, loading, error } = useQuery<GetAllHotelsResponse>(GET_ALL_HOTELS);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  const hotels = data?.findAllHotels?.slice(0, 4) || [];
+  const hotels = data?.findAllHotels?.slice(0, 6) || [];
+
+  const handleNext = () => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    const scrollAmount = Math.max(container.clientWidth * 0.75, 260);
+    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
 
   return (
-    <section className="w-full ">
-    <div className="mx-auto w-full px-4 py-14  sm:px-6 lg:w-[70vw] lg:px-0">
-      <div className="mb-8 flex flex-col gap-2 sm:mb-10">
-        {/* <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
-          Stay Picks
-        </p> */}
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Recommended Hotels
-        </h2>
-        {/* <p className="max-w-2xl text-sm text-slate-500 sm:text-base">
-          Curated stays with great locations, thoughtful amenities, and top guest experiences.
-        </p> */}
-      </div>
-
-      {loading && (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="h-72 animate-pulse rounded-3xl border border-slate-200 bg-slate-100"
-            />
-          ))}
-        </div>
-      )}
-
-      {error && (
-        <div className="rounded-2xl border border-red-100 bg-red-50 py-8 text-center text-red-600">
-          Failed to load hotels. Please try again.
-        </div>
-      )}
-
-      {!loading && hotels.length > 0 && (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {hotels.map((hotel) => (
-            <HotelCard key={hotel.id} hotel={hotel} />
-          ))}
-        </div>
-      )}
-
-      {!loading && hotels.length === 0 && (
-        <div className="rounded-2xl border border-slate-200 py-8 text-center text-slate-400">
-          No hotels found yet.
-        </div>
-      )}
-
-      {!loading && !error && hotels.length > 0 && (
-        <div className="mt-8 flex justify-center">
+    <section className="w-full">
+      <div className="mx-auto w-full px-4 py-14 sm:px-6 lg:w-[80%] lg:px-0">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
+            Unwind in our selected hotels in Shanghai
+          </h2>
           <Link
-            href={routes.search}
-            className="inline-flex items-center rounded-xl border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-blue-600 hover:bg-blue-600"
+            href={routes.hotels}
+            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-700 transition hover:text-slate-900"
           >
-            View all Hotels
+            More
+            <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
-      )}
-    </div>
+
+        <div className="relative">
+          {loading && (
+            <div className="flex gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-95 min-w-60 flex-none animate-pulse rounded-2xl bg-slate-100 sm:min-w-70 sm:max-w-75"
+                />
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-2xl border border-red-100 bg-red-50 py-8 text-center text-red-600">
+              Failed to load hotels. Please try again.
+            </div>
+          )}
+
+          {!loading && hotels.length > 0 && (
+            <div
+              ref={carouselRef}
+              className="flex gap-6 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            >
+              {hotels.map((hotel) => (
+                <HotelCard key={hotel.id} hotel={hotel} />
+              ))}
+            </div>
+          )}
+
+          {!loading && !error && hotels.length > 0 && (
+            <button
+              type="button"
+              aria-label="Next hotels"
+              onClick={handleNext}
+              className="absolute right-0 top-1/2 hidden -translate-y-1/2 rounded-full bg-white p-3 text-slate-700 shadow-md transition hover:bg-gray-100 lg:block"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+
+        {!loading && hotels.length === 0 && (
+          <div className="rounded-2xl border border-slate-200 py-8 text-center text-slate-400">
+            No hotels found yet.
+          </div>
+        )}
+      </div>
     </section>
   );
 }

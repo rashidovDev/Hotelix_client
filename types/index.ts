@@ -284,6 +284,7 @@ export type RegisterInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
+  role?: InputMaybe<Role>;
 };
 
 export type ReviewEntity = {

@@ -55,7 +55,7 @@ const guides: GuideItem[] = [
 
 export default function FeaturedGuides() {
   return (
-    <section className="w-full">
+    <section className="w-full ">
       <div className="mx-auto w-full px-4 py-14 sm:px-6 lg:w-[70vw] lg:px-0">
         <div className="mb-8 flex flex-col gap-2 sm:mb-10">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -72,7 +72,7 @@ export default function FeaturedGuides() {
         <div className="mt-8 flex justify-center">
           <Link
             href={routes.guides}
-            className="inline-flex items-center rounded-xl border border-blue-500 bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:border-blue-600 hover:bg-blue-600"
+            className="inline-flex items-center rounded-xl border border-blue-500 px-5 py-2.5 text-sm font-semibold text-blue-600 transition hover:border-blue-600"
           >
             View all Guides
           </Link>

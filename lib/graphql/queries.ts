@@ -63,8 +63,10 @@ export const GET_MY_HOTELS = gql`
       name
       city
       country
+      location
       rating
       images
+      amenities
     }
   }
 `;

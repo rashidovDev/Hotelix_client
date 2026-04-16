@@ -22,14 +22,31 @@ function decodeJwtPayload(token: string): Record<string, unknown> | null {
   }
 }
 
+function getValidRefreshPayload(token?: string) {
+  if (!token) return null;
+
+  const payload = decodeJwtPayload(token);
+  if (!payload) return null;
+
+  const exp = payload.exp;
+  if (typeof exp !== "number") return null;
+
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  if (exp <= nowInSeconds) return null;
+
+  return payload;
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const authStorage = request.cookies.get("hotelix-auth");
   const refreshTokenCookie = request.cookies.get("refreshToken");
+  const refreshPayload = getValidRefreshPayload(refreshTokenCookie?.value);
 
   let isAuthenticated = false;
   let userRole = "";
+  let authenticatedByRefresh = false;
 
   if (authStorage) {
     try {
@@ -41,16 +58,16 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // Server sets auth state via HttpOnly refresh token cookie.
-  if (!isAuthenticated && refreshTokenCookie?.value) {
+  // Server-set HttpOnly refresh token is accepted only when structurally valid and not expired.
+  if (!isAuthenticated && refreshPayload) {
     isAuthenticated = true;
+    authenticatedByRefresh = true;
   }
 
   // If role is not available in storage cookie, derive it from JWT payload.
-  if (!userRole && refreshTokenCookie?.value) {
-    const payload = decodeJwtPayload(refreshTokenCookie.value);
-    if (typeof payload?.role === "string") {
-      userRole = payload.role;
+  if (!userRole && refreshPayload) {
+    if (typeof refreshPayload.role === "string") {
+      userRole = refreshPayload.role;
     }
   }
 
@@ -79,7 +96,8 @@ export function proxy(request: NextRequest) {
   const isAuthRoute = authRoutes.some((route) =>
     pathname.startsWith(route)
   );
-  if (isAuthRoute && isAuthenticated) {
+  // Do not force-redirect auth pages based only on refresh cookie presence.
+  if (isAuthRoute && isAuthenticated && !authenticatedByRefresh) {
     if (userRole === "ADMIN") {
       return NextResponse.redirect(new URL("/admin", request.url));
     }

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 import { routes } from "@/config/routes";
+import { useQuery } from "@apollo/client/react";
+import { GET_ME } from "@/lib/graphql/queries";
 import {
   LayoutDashboard,
   CalendarDays,
@@ -13,6 +15,12 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
+import { UserEntity } from "@/types";
+
+interface MeQueryResponse {
+  me: UserEntity;
+}
 
 const guestLinks = [
   { label: "Overview", href: routes.dashboard, icon: LayoutDashboard },
@@ -33,33 +41,49 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuthStore();
   const { logout } = useAuth();
+  const [imageError, setImageError] = useState(false);
+
+  const { data } = useQuery<MeQueryResponse>(GET_ME, {
+    skip: !user,
+    fetchPolicy: "network-only",
+  });
+
+  const currentUser = data?.me ?? user;
+  const avatarUrl = currentUser?.avatar?.trim() || "";
+
+  useEffect(() => {
+    setImageError(false);
+  }, [avatarUrl]);
 
   const links =
-    user?.role === "HOST" || user?.role === "ADMIN" ? hostLinks : guestLinks;
+    currentUser?.role === "HOST" || currentUser?.role === "ADMIN"
+      ? hostLinks
+      : guestLinks;
 
   return (
     <aside className="w-64 min-h-screen bg-white border-r flex flex-col">
       {/* User Info */}
       <div className="p-6 border-b">
         <div className="flex items-center gap-3">
-          {user?.avatar ? (
+          {avatarUrl && !imageError ? (
             <img
-              src={user.avatar}
+              src={avatarUrl}
               alt="User avatar"
               className="w-10 h-10 rounded-full object-cover"
+              onError={() => setImageError(true)}
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">
-              {user?.firstName?.[0]}
-              {user?.lastName?.[0]}
+              {currentUser?.firstName?.[0]}
+              {currentUser?.lastName?.[0]}
             </div>
           )}
           <div>
             <p className="font-semibold text-gray-800 text-sm">
-              {user?.firstName} {user?.lastName}
+              {currentUser?.firstName} {currentUser?.lastName}
             </p>
             <p className="text-xs text-gray-500 capitalize">
-              {user?.role?.toLowerCase()}
+              {currentUser?.role?.toLowerCase()}
             </p>
           </div>
         </div>

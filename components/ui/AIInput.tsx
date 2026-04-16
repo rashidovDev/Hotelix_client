@@ -3,15 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  CalendarDays,
+  ArrowRight,
   ChevronLeft,
   ChevronRight,
-  Info,
   MapPin,
   Minus,
   Plus,
-  Search,
-  Star,
   Users,
   X,
 } from "lucide-react";
@@ -117,8 +114,6 @@ export default function AIInput() {
   const [adultCount, setAdultCount] = useState(2);
   const [childCount, setChildCount] = useState(0);
   const [childAges, setChildAges] = useState<ChildAge[]>([]);
-  const [workTrip, setWorkTrip] = useState(false);
-  const [selectedStars, setSelectedStars] = useState<number[]>([]);
   const [activePanel, setActivePanel] = useState<Panel>(null);
   const [visibleMonth, setVisibleMonth] = useState(() => startOfMonth(new Date()));
 
@@ -126,7 +121,8 @@ export default function AIInput() {
   const currentMonth = useMemo(() => buildMonthGrid(visibleMonth), [visibleMonth]);
   const nextMonth = useMemo(() => buildMonthGrid(addMonths(visibleMonth, 1)), [visibleMonth]);
   const nights = nightsBetween(checkIn, checkOut);
-  const dateSummary = checkIn && checkOut ? `${formatShortDate(checkIn)} – ${formatShortDate(checkOut)}` : "Select dates";
+  const checkInSummary = checkIn ? formatShortDate(checkIn) : "Add date";
+  const checkOutSummary = checkOut ? formatShortDate(checkOut) : "Add date";
 
   useEffect(() => {
     if (!activePanel) return;
@@ -182,12 +178,6 @@ export default function AIInput() {
     return value > startOfDay(checkIn).getTime() && value < startOfDay(checkOut).getTime();
   };
 
-  const toggleStar = (star: number) => {
-    setSelectedStars((current) =>
-      current.includes(star) ? current.filter((item) => item !== star) : [...current, star].sort((left, right) => left - right)
-    );
-  };
-
   const adjustCount = (kind: "rooms" | "adults" | "children", delta: number) => {
     if (kind === "rooms") {
       setRoomCount((current) => Math.min(10, Math.max(1, current + delta)));
@@ -228,9 +218,6 @@ export default function AIInput() {
     params.set("adults", String(adultCount));
     params.set("children", String(childCount));
 
-    if (workTrip) params.set("workTrip", "true");
-    if (selectedStars.length > 0) params.set("stars", selectedStars.join(","));
-
     router.push(`${routes.search}?${params.toString()}`);
     closePanel();
   };
@@ -241,82 +228,81 @@ export default function AIInput() {
 
   return (
     <section
-      className="w-full px-4 py-8 mt-25 sm:px-6 lg:px-8"
+      className="w-full px-4 py-8 mt-36 sm:px-6 lg:px-8"
       style={{
         ["--blue" as never]: BLUE,
         ["--light-blue" as never]: LIGHT_BLUE,
       } as React.CSSProperties}
     >
       <div className="mx-auto max-w-7xl">
-        <div className="rounded-2xl border border-slate-200 bg-white">
-          <div className="grid gap-2 p-2.5 lg:grid-cols-[1.2fr_1.55fr_1fr_auto] lg:gap-0">
-            <div className="relative flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2.5 transition hover:bg-(--light-blue)" style={{ backgroundColor: LIGHT_BLUE }}>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600">
-                <MapPin className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Destination</p>
-                <input
-                  value={location}
-                  onChange={(event) => setLocation(event.target.value)}
-                  placeholder="Where to?"
-                  className="mt-1 w-full bg-transparent text-[13px] font-medium text-slate-900 outline-none placeholder:text-slate-400"
-                />
+        <h1 className="text-center text-5xl text-white mb-5">Book your stay with Hotelix</h1>
+        <div className="w-full rounded-full bg-white px-4 py-3 shadow-md transition-all duration-200 sm:px-5 md:px-6 md:py-4">
+          <div className="flex flex-col gap-2 md:h-16 md:flex-row md:items-center md:gap-0">
+            <div className="flex min-w-0 flex-1 items-stretch">
+              <div className="group relative flex flex-1 cursor-pointer flex-col justify-center rounded-none px-4 py-3 transition-all duration-200 hover:bg-gray-50 focus-within:scale-[1.02] focus-within:bg-gray-100 md:border-r md:border-gray-200">
+                <label className="text-xs font-medium text-gray-500">Location</label>
+                <div className="mt-1 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                  <input
+                    value={location}
+                    onChange={(event) => setLocation(event.target.value)}
+                    placeholder="Copenhagen, Denmark"
+                    className="w-full bg-transparent text-sm font-semibold text-gray-800 outline-none placeholder:text-gray-400"
+                  />
+                </div>
+
+                {location.trim() ? (
+                  <button
+                    type="button"
+                    onClick={() => setLocation("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition hover:bg-gray-200 hover:text-gray-600"
+                    aria-label="Clear destination"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                ) : null}
               </div>
-              {location.trim() ? (
-                <button
-                  type="button"
-                  onClick={() => setLocation("")}
-                  className="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-500 transition hover:bg-slate-50"
-                  aria-label="Clear destination"
-                >
-                  X
-                </button>
-              ) : null}
+
+              <button
+                type="button"
+                onClick={() => openPanel("dates")}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-none px-4 py-3 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
+              >
+                <span className="text-xs font-medium text-gray-500">Check-in</span>
+                <span className="mt-1 truncate text-sm font-semibold text-gray-800">{checkInSummary}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openPanel("dates")}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-none px-4 py-3 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
+              >
+                <span className="text-xs font-medium text-gray-500">Check-out</span>
+                <span className="mt-1 truncate text-sm font-semibold text-gray-800">{checkOutSummary}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => openPanel("guests")}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-full px-4 py-3 text-left transition-all duration-200 hover:bg-gray-50 ${activePanel === "guests" ? "bg-gray-100 scale-[1.02]" : ""}`}
+              >
+                <span className="text-xs font-medium text-gray-500">Guests</span>
+                <span className="mt-1 truncate text-sm font-semibold text-gray-800">
+                  {roomsSummary}, {adultsSummary}, {childrenSummary}
+                </span>
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => openPanel("dates")}
-              className="flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2.5 text-left transition hover:bg-(--light-blue)"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600">
-                <CalendarDays className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Dates</p>
-                <p className="mt-1 truncate text-[13px] font-medium text-slate-900">{dateSummary}</p>
-              </div>
-              <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-600">
-                {nights > 0 ? `${nights} night${nights > 1 ? "s" : ""}` : "Select"}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => openPanel("guests")}
-              className="flex items-center gap-2.5 rounded-xl border border-slate-200 px-3 py-2.5 text-left transition hover:bg-(--light-blue)"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600">
-                <Users className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-xs font-medium uppercase tracking-[0.15em] text-slate-500">Guests</p>
-                <p className="mt-1 truncate text-[13px] font-medium text-slate-900">
-                  {roomsSummary}, {adultsSummary}, {childrenSummary}
-                </p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleSearch}
-              className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition hover:opacity-95"
-              style={{ backgroundColor: BLUE }}
-            >
-              Search
-              <Search className="h-4 w-4" />
-            </button>
+            <div className="flex justify-end md:ml-2 md:border-l md:border-gray-200 md:pl-3">
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="flex h-11 w-full items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md transition-all duration-200 hover:bg-blue-700 md:h-12 md:w-14"
+                aria-label="Search"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </button>
+            </div>
           </div>
 
           {activePanel ? (
@@ -559,43 +545,6 @@ export default function AIInput() {
             </div>
           ) : null}
 
-          <div className="border-t border-slate-200 px-4 py-4 sm:px-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <label className="inline-flex items-center gap-3 text-sm font-medium text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={workTrip}
-                  onChange={(event) => setWorkTrip(event.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-(--blue) focus:ring-(--blue)"
-                />
-                <span className="inline-flex items-center gap-2">
-                  I&apos;m traveling for work
-                  <Info className="h-4 w-4 text-slate-400" />
-                </span>
-              </label>
-
-              <div className="flex flex-wrap items-center gap-2">
-                {[2, 3, 4, 5].map((rating) => {
-                  const active = selectedStars.includes(rating);
-
-                  return (
-                    <button
-                      key={rating}
-                      type="button"
-                      onClick={() => toggleStar(rating)}
-                      className={`rounded-full border px-3 py-2 text-sm font-medium transition ${
-                        active
-                          ? "border-(--blue) bg-(--light-blue) text-(--blue)"
-                          : "border-slate-200 bg-white text-slate-700 hover:bg-(--light-blue)"
-                      }`}
-                    >
-                      {rating === 2 ? "≤2 ★" : `${rating} ★`}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
