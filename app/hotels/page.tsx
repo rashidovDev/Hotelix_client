@@ -1,15 +1,24 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@apollo/client/react";
-import HotelCard, { HotelListItem } from "@/components/hotels/HotelCard";
+import HotelCardWithSubscription from "@/components/hotels/HotelCardWithSubscription";
+import { HotelListItem } from "@/components/hotels/HotelCard";
 import Sidebar from "@/components/hotels/Sidebar";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumb from "@/components/ui/Breadcrumb";
+import { routes } from "@/config/routes";
 import { GET_ALL_HOTELS } from "@/lib/graphql/queries";
 import { HotelEntity } from "@/types";
 
 type SortOption = "recommended" | "price_low" | "price_high" | "rating";
+
+interface GuestCounts {
+  adults: number;
+  children: number;
+  babies: number;
+}
 
 interface GetAllHotelsResponse {
   findAllHotels: HotelEntity[];
@@ -21,6 +30,7 @@ function mapApiHotelToListItem(hotel: HotelEntity): HotelListItem {
   const rating = hotel.rating ? Number(hotel.rating) : 8.5;
 
   return {
+    id: hotel.id,
     name: hotel.name,
     image: hotel.images?.[0] || "/hotel.jpg",
     rating,
@@ -38,26 +48,35 @@ function mapApiHotelToListItem(hotel: HotelEntity): HotelListItem {
 export default function HotelsPage() {
   const searchParams = useSearchParams();
   const { data, loading, error } = useQuery<GetAllHotelsResponse>(GET_ALL_HOTELS);
+  const ownerId = searchParams?.get("ownerId")?.trim() || "";
+  const initialCity = searchParams?.get("city")?.trim() || "";
   
-  // Initialize destination from URL query parameter
-  const [destination, setDestination] = useState("");
+  // Draft values edited in sidebar inputs
+  const [draftDestination, setDraftDestination] = useState(initialCity);
+  const [draftCheckIn, setDraftCheckIn] = useState("2026-12-09");
+  const [draftCheckOut, setDraftCheckOut] = useState("2026-12-12");
+  const [draftGuestCounts, setDraftGuestCounts] = useState<GuestCounts>({
+    adults: 2,
+    children: 0,
+    babies: 0,
+  });
+  const [draftSelectedFilters, setDraftSelectedFilters] = useState<string[]>([]);
+  const [draftMaxPrice, setDraftMaxPrice] = useState(450);
+
+  // Applied values used to filter result list
+  const [destination, setDestination] = useState(initialCity);
   const [checkIn, setCheckIn] = useState("2026-12-09");
   const [checkOut, setCheckOut] = useState("2026-12-12");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>("recommended");
   const [maxPrice, setMaxPrice] = useState(450);
 
-  // Read city from query parameter on mount
-  useEffect(() => {
-    const cityParam = searchParams?.get("city");
-    if (cityParam) {
-      setDestination(cityParam);
-    }
-  }, [searchParams]);
-
   const filteredHotels = useMemo(() => {
     const apiHotels = data?.findAllHotels || [];
-    const hotels = apiHotels.map(mapApiHotelToListItem);
+    const ownerFilteredHotels = ownerId
+      ? apiHotels.filter((hotel) => hotel.ownerId === ownerId)
+      : apiHotels;
+    const hotels = ownerFilteredHotels.map(mapApiHotelToListItem);
     const normalizedDestination = destination.trim().toLowerCase();
 
     let result = hotels.filter((hotel) => {
@@ -93,15 +112,29 @@ export default function HotelsPage() {
         break;
     }
     return result;
-  }, [data, destination, selectedFilters, sortBy, maxPrice]);
+  }, [data, destination, selectedFilters, sortBy, maxPrice, ownerId]);
 
   const toggleFilter = (filter: string) => {
-    setSelectedFilters((prev) =>
+    setDraftSelectedFilters((prev) =>
       prev.includes(filter)
         ? prev.filter((item) => item !== filter)
         : [...prev, filter]
     );
   };
+
+  const applySearch = () => {
+    setDestination(draftDestination);
+    setCheckIn(draftCheckIn);
+    setCheckOut(draftCheckOut);
+    setSelectedFilters(draftSelectedFilters);
+    setMaxPrice(draftMaxPrice);
+  };
+
+  const updateGuestCount = (type: keyof GuestCounts, value: number) => {
+    setDraftGuestCounts((prev) => ({ ...prev, [type]: value }));
+  };
+
+  const guestSummary = `${draftGuestCounts.adults} adult${draftGuestCounts.adults === 1 ? "" : "s"}, ${draftGuestCounts.children} child${draftGuestCounts.children === 1 ? "" : "ren"}, ${draftGuestCounts.babies} baby${draftGuestCounts.babies === 1 ? "" : "ies"}`;
 
   return (
     <section className="min-h-screen bg-slate-50">
@@ -118,7 +151,7 @@ export default function HotelsPage() {
           <Navbar />
           <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-14 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold tracking-tight text-white drop-shadow sm:text-4xl">
-              {destination ? `Hotels in ${destination}` : "Hotels"}
+              {ownerId ? "Host's Hotels" : destination ? `Hotels in ${destination}` : "Hotels"}
             </h1>
             <p className="mt-2 max-w-2xl text-sm text-sky-50 sm:text-base">
               Compare stays, filter smarter, and book your perfect city escape.
@@ -128,25 +161,40 @@ export default function HotelsPage() {
       </div>
 
       <div className="mx-auto w-full px-4 py-6 sm:px-6 sm:py-10 lg:w-[80%] lg:px-8">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: routes.home },
+            { label: ownerId ? "Host's Hotels" : "Search results", href: routes.hotels },
+            { label: ownerId ? "Filtered results" : destination || "All hotels" },
+          ]}
+          className="mb-6"
+        />
+
         <div className="flex flex-col gap-6 md:flex-row">
           <Sidebar
-            destination={destination}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            guests="2 adults, 1 room"
-            maxPrice={maxPrice}
-            selectedFilters={selectedFilters}
-            onDestinationChange={setDestination}
-            onCheckInChange={setCheckIn}
-            onCheckOutChange={setCheckOut}
+            destination={draftDestination}
+            checkIn={draftCheckIn}
+            checkOut={draftCheckOut}
+            guestCounts={draftGuestCounts}
+            maxPrice={draftMaxPrice}
+            selectedFilters={draftSelectedFilters}
+            onDestinationChange={setDraftDestination}
+            onCheckInChange={setDraftCheckIn}
+            onCheckOutChange={setDraftCheckOut}
+            onGuestCountChange={updateGuestCount}
             onToggleFilter={toggleFilter}
-            onMaxPriceChange={setMaxPrice}
+            onMaxPriceChange={setDraftMaxPrice}
+            onSearch={applySearch}
           />
 
           <div className="min-w-0 flex-1 space-y-4">
             <div className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-[0_12px_40px_-28px_rgba(15,23,42,0.45)] sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-600">
-                {loading ? "Loading..." : `${filteredHotels.length} search results for ${destination}, ${checkIn.split("-")[2]} - ${checkOut.split("-")[2]} Dec, 2 guests, 1 room`}
+                {loading
+                  ? "Loading..."
+                  : ownerId
+                    ? `${filteredHotels.length} hotels from this host`
+                    : `${filteredHotels.length} search results for ${destination}, ${checkIn.split("-")[2]} - ${checkOut.split("-")[2]} Dec, ${guestSummary}, 1 room`}
               </p>
               <label className="inline-flex items-center gap-2 text-sm text-slate-700">
                 <span className="font-medium">Sort by</span>
@@ -177,7 +225,7 @@ export default function HotelsPage() {
               )}
 
               {!loading && !error && filteredHotels.map((hotel) => (
-                <HotelCard key={hotel.name} hotel={hotel} />
+                <HotelCardWithSubscription key={hotel.id} hotel={hotel} />
               ))}
 
               {!loading && !error && filteredHotels.length === 0 && (

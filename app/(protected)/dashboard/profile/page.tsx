@@ -3,11 +3,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client/react";
 import Button from "@/components/ui/Button";
-import { GET_ME } from "@/lib/graphql/queries";
+import { GET_ME, GET_MY_BOOKINGS } from "@/lib/graphql/queries";
 import { UPDATE_AVATAR, UPDATE_USER } from "@/lib/graphql/mutations";
 import { useAuthStore } from "@/store/authStore";
 import { UpdateUserInput, UserEntity } from "@/types";
 import { format } from "date-fns";
+import BookingCard from "@/components/dashboard/BookingCard";
 
 interface MeQueryResponse {
   me: UserEntity;
@@ -28,6 +29,33 @@ interface UpdateUserResponse {
 interface UpdateUserVariables {
   id: string;
   input: UpdateUserInput;
+}
+
+interface Booking {
+  id: string;
+  checkIn: string;
+  checkOut: string;
+  totalPrice: number;
+  status: "CONFIRMED" | "PENDING" | "CANCELLED";
+  createdAt: string;
+  room: {
+    id: string;
+    name: string;
+    type: string;
+    price: number;
+    images?: string[];
+    hotel: {
+      id: string;
+      name: string;
+      city: string;
+      images?: string[];
+      rating?: number;
+    };
+  };
+}
+
+interface MyBookingsResponse {
+  myBookings: Booking[];
 }
 
 async function uploadToCloudinary(file: File): Promise<string> {
@@ -103,6 +131,14 @@ export default function ProfilePage() {
     skip: !user,
     fetchPolicy: "network-only",
   });
+
+  const { data: bookingsData, loading: bookingsLoading } = useQuery<MyBookingsResponse>(
+    GET_MY_BOOKINGS,
+    {
+      skip: !user,
+      fetchPolicy: "network-only",
+    }
+  );
 
   const [updateAvatar, { loading: avatarUpdating }] = useMutation<
     UpdateAvatarResponse,
@@ -245,7 +281,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-2 md:px-4">
+    <div className="px-2 md:px-4">
       <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
         <div className="bg-linear-to-r from-sky-50 via-cyan-50 to-blue-100 px-6 py-8 md:px-10">
           <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
@@ -383,6 +419,37 @@ export default function ProfilePage() {
                 {success}
               </div>
             )}
+          </div>
+        )}
+      </div>
+
+      {/* Bookings Section */}
+      <div className="mt-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">My Bookings</h2>
+          <p className="mt-1 text-sm text-gray-600">
+            View all your hotel reservations and booking details
+          </p>
+        </div>
+
+        {bookingsLoading ? (
+          <div className="space-y-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-64 animate-pulse rounded-2xl bg-gray-200" />
+            ))}
+          </div>
+        ) : bookingsData?.myBookings && bookingsData.myBookings.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {bookingsData.myBookings.map((booking) => (
+              <BookingCard key={booking.id} booking={booking} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 py-12 text-center">
+            <p className="text-gray-600">You haven't made any bookings yet.</p>
+            <p className="mt-1 text-sm text-gray-500">
+              Start by exploring and booking your favorite hotels!
+            </p>
           </div>
         )}
       </div>

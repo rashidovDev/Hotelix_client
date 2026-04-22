@@ -157,6 +157,12 @@ export const GET_HOTEL_REVIEWS = gql`
       userId
       hotelId
       createdAt
+      user {
+        id
+        firstName
+        lastName
+        avatar
+      }
     }
   }
 `;
@@ -215,5 +221,29 @@ export const GET_ALL_USERS = gql`
       avatar
       createdAt
     }
+  }
+`;
+
+// ── Subscriptions ──
+export const IS_SUBSCRIBED = gql`
+  query IsSubscribed($hotelId: String!) {
+    isSubscribed(hotelId: $hotelId)
+  }
+`;
+
+export const GET_MY_SUBSCRIPTIONS = gql`
+  query MySubscriptions {
+    mySubscriptions {
+      id
+      userId
+      hotelId
+      createdAt
+    }
+  }
+`;
+
+export const GET_HOTEL_SUBSCRIPTION_COUNT = gql`
+  query GetHotelSubscriptionCount($hotelId: String!) {
+    getHotelSubscriptionCount(hotelId: $hotelId)
   }
 `;

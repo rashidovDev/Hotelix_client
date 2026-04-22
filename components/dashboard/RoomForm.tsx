@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 import { ROOM_TYPES } from "@/config/constants";
 
 interface Room {
@@ -24,6 +23,63 @@ interface RoomFormProps {
   onCancel?: () => void;
 }
 
+async function uploadRoomImageToCloudinary(file: File): Promise<string> {
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_HOTEL;
+
+  if (!cloudName || !uploadPreset) {
+    throw new Error(
+      "Cloudinary is not configured. Add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET_HOTEL."
+    );
+  }
+
+  const tryUpload = async (preset: string): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", preset);
+    formData.append("folder", "hotelix/rooms");
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const details = payload?.error?.message || "";
+      throw new Error(
+        details ? `Cloudinary upload failed: ${details}` : "Cloudinary upload failed."
+      );
+    }
+
+    if (!payload?.secure_url) {
+      throw new Error("Cloudinary did not return an image URL.");
+    }
+
+    return payload.secure_url as string;
+  };
+
+  try {
+    return await tryUpload(uploadPreset);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const lowerPreset = uploadPreset.toLowerCase();
+
+    if (
+      message.toLowerCase().includes("upload preset not found") &&
+      lowerPreset !== uploadPreset
+    ) {
+      return tryUpload(lowerPreset);
+    }
+
+    throw error;
+  }
+}
+
 export default function RoomForm({
   hotelId,
   initialRoom,
@@ -42,6 +98,7 @@ export default function RoomForm({
 
   const [imageInput, setImageInput] = useState("");
   const [error, setError] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -70,6 +127,44 @@ export default function RoomForm({
       ...prev,
       images: prev.images.filter((_, i) => i !== index),
     }));
+  };
+
+  const handleUploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    setError("");
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Image size must be less than 10MB.");
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      setImageUploading(true);
+      const imageUrl = await uploadRoomImageToCloudinary(file);
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, imageUrl],
+      }));
+    } catch (uploadError) {
+      const message =
+        uploadError instanceof Error
+          ? uploadError.message
+          : "Failed to upload image.";
+      setError(message);
+    } finally {
+      setImageUploading(false);
+      event.target.value = "";
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -208,16 +303,32 @@ export default function RoomForm({
             value={imageInput}
             onChange={(e) => setImageInput(e.target.value)}
             placeholder="Enter image URL"
-            disabled={isLoading}
+            disabled={isLoading || imageUploading}
           />
           <button
             type="button"
             onClick={handleAddImage}
-            disabled={isLoading || !imageInput.trim()}
+            disabled={isLoading || imageUploading || !imageInput.trim()}
             className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             Add
           </button>
+        </div>
+
+        <div className="mt-3">
+          <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-slate-500">
+            Or Upload Image
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleUploadImage}
+            disabled={isLoading || imageUploading}
+            className="block w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 file:mr-3 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100 disabled:cursor-not-allowed disabled:opacity-50"
+          />
+          {imageUploading && (
+            <p className="mt-2 text-sm text-slate-600">Uploading image...</p>
+          )}
         </div>
 
         {formData.images.length > 0 && (
@@ -253,10 +364,16 @@ export default function RoomForm({
       <div className="flex gap-3 pt-4">
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || imageUploading}
           className="flex-1 rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50"
         >
-          {isLoading ? "Saving..." : initialRoom ? "Update Room" : "Create Room"}
+          {isLoading
+            ? "Saving..."
+            : imageUploading
+            ? "Uploading image..."
+            : initialRoom
+            ? "Update Room"
+            : "Create Room"}
         </button>
         {onCancel && (
           <button

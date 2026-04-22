@@ -11,6 +11,13 @@ interface LoginMutationResponse { login: AuthResponse; }
 interface RegisterMutationResponse { register: AuthResponse; }
 interface LogoutMutationResponse { logout: boolean; }
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return fallback;
+};
+
 export const useAuth = () => {
   const { setAuth, clearAuth, isAuthenticated, user } = useAuthStore();
   const router = useRouter();
@@ -35,9 +42,9 @@ export const useAuth = () => {
       }
 
       setAuth(payload.user, payload.accessToken);
-      router.push(routes.dashboard);
-    } catch (error: any) {
-      const message = error?.message || "Login failed. Please try again.";
+      router.push(routes.home);
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "Login failed. Please try again.");
       throw new Error(message);
     }
   };
@@ -52,9 +59,9 @@ export const useAuth = () => {
       }
 
       setAuth(payload.user, payload.accessToken);
-      router.push(routes.dashboard);
-    } catch (error: any) {
-      const message = error?.message || "Registration failed. Please try again.";
+      router.push(routes.home);
+    } catch (error: unknown) {
+      const message = getErrorMessage(error, "Registration failed. Please try again.");
       throw new Error(message);
     }
   };

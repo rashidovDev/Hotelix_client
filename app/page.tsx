@@ -18,8 +18,8 @@ export default function Home() {
         <FeaturedDestinations/>
         <FeaturedHotels />
         {/* <FeaturedTours />
-        <FeaturedCars />
-        <FeaturedGuides /> */}
+        <FeaturedCars />*/}
+       <FeaturedGuides /> 
       </main>
     </div>
   );

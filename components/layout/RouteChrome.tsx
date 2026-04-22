@@ -14,6 +14,7 @@ export default function RouteChrome({ children }: RouteChromeProps) {
   const isDashboardRoute = pathname.startsWith("/dashboard");
   const isHotelsRoute = pathname === "/hotels";
   const isHotelDetailsRoute = pathname.startsWith("/hotels/");
+  const isGuidesRoute = pathname === "/guides";
   const isHomeRoute = pathname === "/";
 
   if (isAuthRoute || isDashboardRoute) {
@@ -29,7 +30,7 @@ export default function RouteChrome({ children }: RouteChromeProps) {
     );
   }
 
-  if (isHotelsRoute || isHotelDetailsRoute) {
+  if (isHotelsRoute || isHotelDetailsRoute || isGuidesRoute) {
     return (
       <>
         <main className="flex-1">{children}</main>

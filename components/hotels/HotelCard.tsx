@@ -1,4 +1,8 @@
+import Link from "next/link";
+import { routes } from "@/config/routes";
+
 export interface HotelListItem {
+  id: string;
   name: string;
   image: string;
   rating: number;
@@ -10,13 +14,22 @@ export interface HotelListItem {
   price: number;
   tags: string[];
   dealTags: string[];
+  subscriptionCount?: number;
 }
 
 interface HotelCardProps {
   hotel: HotelListItem;
+  isSubscribed?: boolean;
+  onFollow?: () => void;
+  followLoading?: boolean;
 }
 
-export default function HotelCard({ hotel }: HotelCardProps) {
+export default function HotelCard({
+  hotel,
+  isSubscribed,
+  onFollow,
+  followLoading = false,
+}: HotelCardProps) {
   const ratingLabel = hotel.rating >= 9 ? "Excellent" : "Very good";
   const ratingClass =
     ratingLabel === "Excellent"
@@ -70,17 +83,31 @@ export default function HotelCard({ hotel }: HotelCardProps) {
             {ratingLabel} {hotel.rating.toFixed(1)}
           </div>
           <p className="mt-1 text-xs text-slate-500">{hotel.reviews} reviews</p>
+          {isSubscribed === false && onFollow ? (
+            <button
+              type="button"
+              onClick={onFollow}
+              disabled={followLoading}
+              className="mt-2 inline-flex rounded-full border 
+              border-blue-500 hover:bg-blue-500 px-3 py-1 text-xs font-semibold
+               hover:text-white transition disabled:opacity-60 text-blue-500"
+            >
+              {followLoading ? "Following..." : "Follow"}
+            </button>
+          ) : hotel.subscriptionCount !== undefined ? (
+            <p className="mt-1 text-xs text-slate-500"> {hotel.subscriptionCount} followers</p>
+          ) : null}
         </div>
 
         <div className="text-right">
           <p className="text-3xl font-bold text-slate-900">${hotel.price}</p>
-          <p className="mt-1 text-xs text-slate-500">3 nights, 2 guests</p>
-          <button
-            type="button"
-            className="mt-3 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+          <p className="mt-1 text-xs text-slate-500">1 night, 2 guests</p>
+          <Link
+            href={routes.hotel(hotel.id)}
+            className="mt-3 inline-flex rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             See booking options
-          </button>
+          </Link>
         </div>
       </div>
     </article>

@@ -45,6 +45,7 @@ export enum BookingStatus {
 export type CreateBookingInput = {
   checkIn: Scalars['DateTime']['input'];
   checkOut: Scalars['DateTime']['input'];
+  guests: Scalars['Int']['input'];
   roomId: Scalars['String']['input'];
 };
 
@@ -295,6 +296,15 @@ export type ReviewEntity = {
   id: Scalars['String']['output'];
   rating: Scalars['Int']['output'];
   userId: Scalars['String']['output'];
+  user?: Maybe<ReviewUserEntity>;
+};
+
+export type ReviewUserEntity = {
+  __typename?: 'ReviewUserEntity';
+  avatar?: Maybe<Scalars['String']['output']>;
+  firstName: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  lastName: Scalars['String']['output'];
 };
 
 /** User roles */

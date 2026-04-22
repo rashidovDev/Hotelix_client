@@ -4,13 +4,11 @@ export const routes = {
   search: "/search",
   hotels: "/hotels",
   hotel: (id: string) => `/hotels/${id}`,
+  subscriptions: "/subscriptions",
   about: "/about",
   guides: "/guides",
   contact: "/contact",
   destinations: "/destinations",
-
-  // Booking
-  book: (id: string) => `/book/${id}`,
 
   // Auth
   login: "/auth/login",

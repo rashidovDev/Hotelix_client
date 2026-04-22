@@ -4,6 +4,7 @@ import { CREATE_BOOKING, CANCEL_BOOKING } from "@/lib/graphql/mutations";
 import { CHECK_ROOM_AVAILABILITY } from "@/lib/graphql/queries";
 import { BookingEntity } from "@/types";
 import { useRouter } from "next/navigation";
+import { routes } from "@/config/routes";
 
 // Define response types
 interface CreateBookingResponse {
@@ -23,9 +24,11 @@ export const useBooking = () => {
     selectedRoom,
     checkIn,
     checkOut,
+    guests,
     totalPrice,
     setCheckIn,
     setCheckOut,
+    setGuests,
     setSelectedRoom,
     calculateTotalPrice,
     clearBooking,
@@ -46,13 +49,15 @@ export const useBooking = () => {
 
   const checkRoomAvailability = async () => {
     if (!selectedRoom || !checkIn || !checkOut) return;
-    await checkAvailability({
+    const result = await checkAvailability({
       variables: {
         roomId: selectedRoom.id,
         checkIn,
         checkOut,
       },
     });
+
+    return result.data?.checkRoomAvailability ?? false;
   };
 
   const createBooking = async () => {
@@ -64,12 +69,14 @@ export const useBooking = () => {
             roomId: selectedRoom.id,
             checkIn,
             checkOut,
+            guests,
           },
         },
       });
       if (data?.createBooking) {
         clearBooking();
-        router.push("/dashboard");
+        router.push(routes.dashboardBookings);
+        return data.createBooking;
       }
     } catch (error) {
       throw error;
@@ -88,6 +95,7 @@ export const useBooking = () => {
     selectedRoom,
     checkIn,
     checkOut,
+    guests,
     totalPrice,
     isAvailable,
     bookingLoading,
@@ -95,6 +103,7 @@ export const useBooking = () => {
     checkingAvailability,
     setCheckIn,
     setCheckOut,
+    setGuests,
     setSelectedRoom,
     calculateTotalPrice,
     checkRoomAvailability,

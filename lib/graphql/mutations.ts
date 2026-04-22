@@ -173,8 +173,6 @@ export const REMOVE_REVIEW = gql`
   }
 `;
 
-
-
 export const UPDATE_USER = gql`
   mutation UpdateUser($id: String!, $input: UpdateUserInput!) {
     updateUser(id: $id, input: $input) {
@@ -208,5 +206,23 @@ export const UPDATE_AVATAR = gql`
 export const REMOVE_USER = gql`
   mutation RemoveUser($id: String!) {
     removeUser(id: $id)
+  }
+`;
+
+// ── Subscriptions ──
+export const SUBSCRIBE_TO_HOTEL = gql`
+  mutation SubscribeToHotel($hotelId: String!) {
+    subscribeToHotel(hotelId: $hotelId) {
+      id
+      userId
+      hotelId
+      createdAt
+    }
+  }
+`;
+
+export const UNSUBSCRIBE_FROM_HOTEL = gql`
+  mutation UnsubscribeFromHotel($hotelId: String!) {
+    unsubscribeFromHotel(hotelId: $hotelId)
   }
 `;

@@ -88,10 +88,14 @@ export default function RegisterForm() {
         password: form.password,
         role: form.role,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Registration failed. Please try again.";
       setErrors((prev) => ({
         ...prev,
-        general: error?.message || "Registration failed. Please try again.",
+        general: message,
       }));
     }
   };

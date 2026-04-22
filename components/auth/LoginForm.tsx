@@ -50,10 +50,14 @@ export default function LoginForm() {
     if (!validate()) return;
     try {
       await login({ email: form.email, password: form.password });
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "Login failed. Please try again.";
       setErrors((prev) => ({
         ...prev,
-        general: error?.message || "Login failed. Please try again.",
+        general: message,
       }));
     }
   };
@@ -100,7 +104,7 @@ export default function LoginForm() {
 
       {/* Footer */}
       <p className="text-center text-sm text-gray-500">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href={routes.register} className="text-blue-600 font-medium hover:underline">
           Register
         </Link>
