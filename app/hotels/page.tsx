@@ -8,6 +8,7 @@ import { HotelListItem } from "@/components/hotels/HotelCard";
 import Sidebar from "@/components/hotels/Sidebar";
 import Navbar from "@/components/layout/Navbar";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import FloatingChatWidget from "@/components/chat/FloatingChatWidget";
 import { routes } from "@/config/routes";
 import { GET_ALL_HOTELS } from "@/lib/graphql/queries";
 import { HotelEntity } from "@/types";
@@ -237,6 +238,8 @@ export default function HotelsPage() {
           </div>
         </div>
       </div>
+
+      <FloatingChatWidget />
     </section>
   );
 }

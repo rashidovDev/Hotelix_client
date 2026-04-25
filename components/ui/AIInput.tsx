@@ -218,7 +218,7 @@ export default function AIInput() {
     params.set("adults", String(adultCount));
     params.set("children", String(childCount));
 
-    router.push(`${routes.search}?${params.toString()}`);
+    router.push(`${routes.hotels}?${params.toString()}`);
     closePanel();
   };
 
@@ -246,7 +246,7 @@ export default function AIInput() {
                   <input
                     value={location}
                     onChange={(event) => setLocation(event.target.value)}
-                    placeholder="Copenhagen, Denmark"
+                    placeholder="Tashkent, Uzbekistan"
                     className="w-full bg-transparent text-sm font-semibold text-gray-800 outline-none placeholder:text-gray-400"
                   />
                 </div>

@@ -34,9 +34,8 @@ function HostCard({ host }: { host: HostItem }) {
   const initials = `${user?.firstName?.[0] || "H"}${user?.lastName?.[0] || ""}`.trim();
 
   return (
-    <article className="relative group overflow-hidden rounded-3xl border border-slate-200
-     bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_50px_-28px_rgba(37,99,235,0.35)]">
-      <div className="relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-slate-50">
+    <article className="relative group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_50px_-28px_rgba(37,99,235,0.35)] flex flex-col h-full">
+      <div className="relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-slate-50 flex flex-col flex-1">
         <div className="h-56 w-full flex justify-center items-center overflow-hidden bg-slate-100 sm:h-64">
           {loading ? (
             <div className="h-32 w-32 rounded-full animate-pulse bg-slate-200" />
@@ -53,7 +52,7 @@ function HostCard({ host }: { host: HostItem }) {
           )}
         </div>
 
-        <div className="space-y-4 p-6 sm:p-8">
+        <div className="flex flex-col flex-1 space-y-4 p-6 sm:p-8">
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Host</p>
             <h3 className="text-2xl font-bold text-slate-900">{fullName}</h3>
@@ -71,7 +70,7 @@ function HostCard({ host }: { host: HostItem }) {
 
           <Link
             href={`${routes.hotels}?ownerId=${encodeURIComponent(host.id)}`}
-            className=" inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+            className="inline-flex bg-blue-500 text-white  items-center justify-center rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold transition hover:bg-blue-700 mt-auto"
           >
             See hotels
           </Link>

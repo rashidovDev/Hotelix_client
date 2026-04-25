@@ -89,7 +89,7 @@ export default function Navbar() {
         <Link href={routes.guides} className="text-white font-extralight  text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
           Hosts
         </Link>
-        <Link href={routes.guides} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.hotels} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
          Hotels
         </Link>
         {/* <Link href={routes.guides} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">

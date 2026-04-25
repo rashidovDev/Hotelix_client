@@ -1,6 +1,7 @@
 import FeaturedGuides from "@/components/guides/FeaturedGuides";
 import Navbar from "@/components/layout/Navbar";
 import Breadcrumb from "@/components/ui/Breadcrumb";
+import FloatingChatWidget from "@/components/chat/FloatingChatWidget";
 import { routes } from "@/config/routes";
 
 export default function GuidesPage() {
@@ -41,6 +42,7 @@ export default function GuidesPage() {
       </div>
 
       <FeaturedGuides />
+      <FloatingChatWidget />
     </>
   );
 }

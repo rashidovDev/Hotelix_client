@@ -1,28 +1,35 @@
-import AIInput from "@/components/ui/AIInput";
 import Navbar from "@/components/layout/Navbar";
 import CloudBackground from "@/components/ui/CloudBackground";
-import FeaturedHotels from "@/components/hotel/FeaturedHotels";
-import FeaturedTours from "@/components/tours/FeaturedTours";
-import FeaturedCars from "@/components/cars/FeaturedCars";
-import FeaturedGuides from "@/components/guides/FeaturedGuides";
-import FeaturedDestinations from "@/components/destinations/FeaturedDestinations";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import FloatingChatWidget from "@/components/chat/FloatingChatWidget";
-import { Award, CheckCircle2, Globe, Users } from "lucide-react";
+import { routes } from "@/config/routes";
+import { CheckCircle2, Users, Globe, Award } from "lucide-react";
 
-export default function Home() {
+export default function AboutPage() {
   return (
-    <div>
-      <main>
-        <CloudBackground>
-          <Navbar />
-          <AIInput />
-        </CloudBackground>
-        <FeaturedDestinations/>
-        <FeaturedHotels />
-        {/* <FeaturedTours />
-        <FeaturedCars />*/}
-       <FeaturedGuides /> 
-      </main>
+    <>
+      <CloudBackground heightClassName="min-h-[50vh]">
+        <Navbar />
+        <div className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
+          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow sm:text-5xl lg:text-6xl">
+            About Hotelix
+          </h1>
+          <p className="mt-4 max-w-2xl text-lg text-blue-100">
+            Revolutionizing the way travelers discover and book their perfect stays
+          </p>
+        </div>
+      </CloudBackground>
+
+      <div className="mx-auto w-full px-4 py-8 sm:px-6 lg:w-[80%] lg:px-0">
+        <Breadcrumb
+          items={[
+            { label: "Home", href: routes.home },
+            { label: "About" },
+          ]}
+        />
+      </div>
+
+      {/* Mission Section */}
       <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
           <div>
@@ -126,6 +133,6 @@ export default function Home() {
       </section>
 
       <FloatingChatWidget />
-    </div>
+    </>
   );
 }

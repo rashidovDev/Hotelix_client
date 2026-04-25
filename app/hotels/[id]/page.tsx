@@ -103,6 +103,7 @@ export default function HotelDetailsPage() {
   const [activeTab, setActiveTab] = useState<HotelTab>("Rooms");
   const [selectedRoom, setSelectedRoom] = useState<RoomEntity | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitError, setReviewSubmitError] = useState("");
@@ -418,7 +419,18 @@ export default function HotelDetailsPage() {
                 <div className="rounded-xl bg-slate-50 px-4 py-2 text-sm text-slate-600">
                   Host since {new Date(host.createdAt).getFullYear()}
                 </div>
-                <button className=" w-full text-center p-2  rounded-lg bg-blue-500 hover:bg-blue-700">Send Message</button>
+                <button 
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      window.location.href = '/auth/login';
+                      return;
+                    }
+                    setIsChatOpen(true);
+                  }}
+                  className="w-full text-center p-2 rounded-lg bg-blue-500 hover:bg-blue-700 text-white font-medium transition-colors"
+                >
+                  Send Message
+                </button>
               </div>
             ) : (
               <p className="mt-3 text-sm text-slate-600">Host information is unavailable.</p>
@@ -449,7 +461,13 @@ export default function HotelDetailsPage() {
         onClose={closeBookingModal}
       />
 
-      <FloatingChatWidget />
+      <FloatingChatWidget 
+        hostName={host ? `${host.firstName} ${host.lastName}` : 'Support'} 
+        hostImage={host?.avatar || 'image'}
+        hotelId={hotelId}
+        isOpen={isChatOpen}
+        onOpenChange={setIsChatOpen}
+      />
     </main>
   );
 }

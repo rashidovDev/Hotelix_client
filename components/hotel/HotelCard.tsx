@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { HotelEntity } from "@/types";
 import { Heart, Star } from "lucide-react";
 import { routes } from "@/config/routes";
@@ -27,6 +28,7 @@ interface UnsubscribeResponse {
 }
 
 export default function HotelCard({ hotel }: { hotel: HotelEntity }) {
+  const router = useRouter();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const rating = hotel.rating ? Number(hotel.rating.toFixed(1)) : null;
   const stars = rating ? Math.min(5, Math.max(1, Math.round(rating / 2))) : 5;
@@ -50,7 +52,12 @@ export default function HotelCard({ hotel }: { hotel: HotelEntity }) {
     event.preventDefault();
     event.stopPropagation();
 
-    if (!isAuthenticated || likeLoading) {
+    if (!isAuthenticated) {
+      router.push(routes.login);
+      return;
+    }
+
+    if (likeLoading) {
       return;
     }
 
@@ -128,7 +135,7 @@ export default function HotelCard({ hotel }: { hotel: HotelEntity }) {
         type="button"
         aria-label="Add to wishlist"
         onClick={handleLikeClick}
-        disabled={!isAuthenticated || likeLoading}
+        disabled={likeLoading}
         className={`absolute right-3 top-3 z-10 rounded-full bg-white p-2 shadow transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-60 ${
           isSubscribed ? "text-rose-500" : "text-slate-600 hover:text-rose-500"
         }`}

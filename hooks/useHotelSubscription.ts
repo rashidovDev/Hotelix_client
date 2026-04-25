@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client/react";
+import { useAuthStore } from "@/store/authStore";
 import { IS_SUBSCRIBED, GET_MY_SUBSCRIPTIONS } from "@/lib/graphql/queries";
 import { SUBSCRIBE_TO_HOTEL, UNSUBSCRIBE_FROM_HOTEL } from "@/lib/graphql/mutations";
 
@@ -29,14 +30,18 @@ interface UnsubscribeResponse {
 }
 
 export const useHotelSubscription = (hotelId?: string) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const { data: subscriptionData, loading: checkLoading, refetch: refetchSubscription } =
     useQuery<IsSubscribedResponse>(IS_SUBSCRIBED, {
       variables: { hotelId: hotelId || "" },
-      skip: !hotelId,
+      skip: !hotelId || !isAuthenticated,
     });
 
   const { data: mySubscriptionsData, loading: subscriptionsLoading } =
-    useQuery<MySubscriptionsResponse>(GET_MY_SUBSCRIPTIONS);
+    useQuery<MySubscriptionsResponse>(GET_MY_SUBSCRIPTIONS, {
+      skip: !isAuthenticated,
+    });
 
   const [subscribe, { loading: subscribeLoading }] =
     useMutation<SubscribeResponse>(SUBSCRIBE_TO_HOTEL);
