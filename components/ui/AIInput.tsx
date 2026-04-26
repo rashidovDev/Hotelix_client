@@ -228,26 +228,26 @@ export default function AIInput() {
 
   return (
     <section
-      className="w-full px-4 py-6 sm:py-8 lg:py-12 mt-16 sm:mt-20 lg:mt-28 lg:px-8"
+      className="w-[60%] mx-auto px-4 py-4 sm:py-5 lg:py-8 mt-8 sm:mt-10 lg:mt-28 lg:px-8"
       style={{
         ["--blue" as never]: BLUE,
         ["--light-blue" as never]: LIGHT_BLUE,
       } as React.CSSProperties}
     >
       <div className="mx-auto max-w-7xl">
-        <h1 className="text-center text-2xl sm:text-3xl lg:text-5xl text-white mb-4 sm:mb-5 font-bold">Book your stay with Hotelix</h1>
-        <div className="w-full rounded-2xl sm:rounded-full bg-white px-2 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-2.5 md:py-3 lg:py-4 shadow-md transition-all duration-200">
-          <div className="flex flex-col gap-1 sm:gap-2 md:h-16 md:flex-row md:items-center md:gap-0">
+        <h1 className="text-center text-lg sm:text-xl lg:text-4xl text-white mb-3 sm:mb-3 font-bold">Book your stay with Hotelix</h1>
+        <div className="w-full rounded-2xl sm:rounded-full bg-white px-2 sm:px-2.5 md:px-3 lg:px-4 py-1.5 sm:py-2 md:py-2.5 lg:py-3 shadow-md transition-all duration-200">
+          <div className="flex flex-col gap-1 sm:gap-1 md:h-12 md:flex-row md:items-center md:gap-0">
             <div className="flex min-w-0 flex-1 flex-col sm:flex-row sm:items-stretch gap-1 sm:gap-0">
-              <div className="group relative flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-4 py-2 sm:py-3 transition-all duration-200 hover:bg-gray-50 focus-within:scale-[1.02] focus-within:bg-gray-100 md:border-r md:border-gray-200">
-                <label className="text-xs font-medium text-gray-500">Location</label>
-                <div className="mt-0.5 sm:mt-1 flex items-center gap-2 min-h-6 sm:min-h-auto">
-                  <MapPin className="h-3 sm:h-4 w-3 sm:w-4 text-gray-400 shrink-0" />
+              <div className="group relative flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-3 py-1.5 sm:py-2 transition-all duration-200 hover:bg-gray-50 focus-within:scale-[1.02] focus-within:bg-gray-100 md:border-r md:border-gray-200">
+                <label className="text-[11px] font-medium text-gray-500">Location</label>
+                <div className="mt-0.5 flex items-center gap-2 min-h-6 sm:min-h-auto">
+                  <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-gray-400 shrink-0" />
                   <input
                     value={location}
                     onChange={(event) => setLocation(event.target.value)}
                     placeholder="Where to?"
-                    className="w-full bg-transparent text-xs sm:text-sm font-semibold text-gray-800 outline-none placeholder:text-gray-400"
+                    className="w-full placeholder:text-[11px] bg-transparent text-[11px] sm:text-xs font-semibold text-gray-800 outline-none placeholder:text-gray-400"
                   />
                 </div>
 
@@ -266,41 +266,41 @@ export default function AIInput() {
               <button
                 type="button"
                 onClick={() => openPanel("dates")}
-                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-4 py-2 sm:py-3 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-3 py-1.5 sm:py-2 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
               >
-                <span className="text-xs font-medium text-gray-500">Check-in</span>
-                <span className="mt-0.5 sm:mt-1 truncate text-xs sm:text-sm font-semibold text-gray-800">{checkInSummary}</span>
+                <span className="text-[11px] font-medium text-gray-500">Check-in</span>
+                <span className="mt-0.5 truncate text-[11px] sm:text-xs font-semibold text-gray-800">{checkInSummary}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => openPanel("dates")}
-                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-4 py-2 sm:py-3 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-none px-3 sm:px-3 py-1.5 sm:py-2 text-left transition-all duration-200 hover:bg-gray-50 md:border-r md:border-gray-200 ${activePanel === "dates" ? "bg-gray-100 scale-[1.02]" : ""}`}
               >
-                <span className="text-xs font-medium text-gray-500">Check-out</span>
-                <span className="mt-0.5 sm:mt-1 truncate text-xs sm:text-sm font-semibold text-gray-800">{checkOutSummary}</span>
+                <span className="text-[11px] font-medium text-gray-500">Check-out</span>
+                <span className="mt-0.5 truncate text-[11px] sm:text-xs font-semibold text-gray-800">{checkOutSummary}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => openPanel("guests")}
-                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-full px-3 sm:px-4 py-2 sm:py-3 text-left transition-all duration-200 hover:bg-gray-50 ${activePanel === "guests" ? "bg-gray-100 scale-[1.02]" : ""}`}
+                className={`flex flex-1 cursor-pointer flex-col justify-center rounded-lg sm:rounded-full px-3 sm:px-3 py-1.5 sm:py-2 text-left transition-all duration-200 hover:bg-gray-50 ${activePanel === "guests" ? "bg-gray-100 scale-[1.02]" : ""}`}
               >
-                <span className="text-xs font-medium text-gray-500">Guests</span>
-                <span className="mt-0.5 sm:mt-1 truncate text-xs sm:text-sm font-semibold text-gray-800">
+                <span className="text-[11px] font-medium text-gray-500">Guests</span>
+                <span className="mt-0.5 truncate text-[11px] sm:text-xs font-semibold text-gray-800">
                   {roomsSummary}, {adultsSummary}, {childrenSummary}
                 </span>
               </button>
             </div>
 
-            <div className="flex justify-end md:ml-1 md:border-l md:border-gray-200 md:pl-2 lg:md:pl-3">
+            <div className="flex justify-end md:ml-1 md:border-l md:border-gray-200 md:pl-1.5 lg:md:pl-2">
               <button
                 type="button"
                 onClick={handleSearch}
-                className="flex h-9 sm:h-10 md:h-12 md:w-12 lg:md:w-14 w-full sm:w-auto items-center justify-center rounded-lg sm:rounded-full bg-blue-600 text-white shadow-md transition-all duration-200 hover:bg-blue-700 gap-2 sm:gap-0"
+                className="flex h-8 sm:h-9 md:h-10 md:w-10 lg:md:w-11 w-full sm:w-auto items-center justify-center rounded-lg sm:rounded-full bg-blue-600 text-white shadow-md transition-all duration-200 hover:bg-blue-700 gap-2 sm:gap-0"
                 aria-label="Search"
               >
-                <span className="sm:hidden text-xs font-semibold">Search</span>
+                <span className="sm:hidden text-[11px] font-semibold">Search</span>
                 <ArrowRight className="h-4 sm:h-5 w-4 sm:w-5" />
               </button>
             </div>
@@ -317,12 +317,12 @@ export default function AIInput() {
                 className="w-full max-h-[90vh] sm:max-h-[80vh] max-w-2xl sm:max-w-4xl lg:max-w-6xl rounded-t-2xl sm:rounded-2xl border border-slate-200 bg-white overflow-y-auto"
                 onClick={(event) => event.stopPropagation()}
               >
-                <div className="flex items-center justify-between border-b border-slate-200 px-3 sm:px-4 md:px-6 py-3 sm:py-4 sticky top-0 bg-white">
+                <div className="flex items-center justify-between border-b border-slate-200 px-3 sm:px-3 md:px-4 py-2 sm:py-2.5 sticky top-0 bg-white">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
                       {activePanel === "dates" ? "Calendar" : "Guests"}
                     </p>
-                    <h2 className="mt-1 text-sm sm:text-base font-semibold text-slate-900">
+                    <h2 className="mt-0.5 text-[11px] sm:text-xs font-semibold text-slate-900">
                       {activePanel === "dates" ? "Choose your stay dates" : "Set guests and rooms"}
                     </h2>
                   </div>
@@ -330,51 +330,51 @@ export default function AIInput() {
                   <button
                     type="button"
                     onClick={closePanel}
-                    className="rounded-full border border-slate-200 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-slate-600 transition hover:bg-slate-50 shrink-0"
+                    className="rounded-full border border-slate-200 px-1.5 sm:px-2 py-1 sm:py-1.5 text-[11px] sm:text-xs font-medium text-slate-600 transition hover:bg-slate-50 shrink-0"
                     aria-label="Close panel"
                   >
-                    <X className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                    <X className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
                   </button>
                 </div>
 
-                <div className="overflow-y-auto p-3 sm:p-4 md:p-6 max-h-[calc(90vh-3.5rem)] sm:max-h-[calc(80vh-3.5rem)]">
+                <div className="overflow-y-auto p-2 sm:p-3 md:p-4 max-h-[calc(90vh-3rem)] sm:max-h-[calc(80vh-3rem)]">
                   {activePanel === "dates" ? (
-                    <div className="space-y-3 sm:space-y-4">
-                      <div className="grid gap-3 sm:gap-4 grid-cols-1 lg:grid-cols-2">
+                    <div className="space-y-2 sm:space-y-3">
+                      <div className="grid gap-2 sm:gap-3 grid-cols-1 lg:grid-cols-2">
                         {[currentMonth, nextMonth].map((month, monthIndex) => (
-                          <div key={month.title} className="rounded-lg sm:rounded-2xl border border-slate-200 p-3 sm:p-4">
-                            <div className="mb-3 sm:mb-4 flex items-center justify-between">
+                          <div key={month.title} className="rounded-lg sm:rounded-xl border border-slate-200 p-2 sm:p-3">
+                            <div className="mb-2 sm:mb-3 flex items-center justify-between">
                               <button
                                 type="button"
                                 onClick={() => setVisibleMonth((current) => addMonths(current, -1))}
-                                className={`rounded-full border border-slate-200 p-1 sm:px-2 sm:py-2 text-slate-600 transition hover:bg-(--light-blue) text-sm sm:text-base ${monthIndex === 1 ? "invisible" : ""}`}
+                                className={`rounded-full border border-slate-200 p-0.5 sm:p-1 text-slate-600 transition hover:bg-(--light-blue) text-xs sm:text-sm ${monthIndex === 1 ? "invisible" : ""}`}
                                 aria-label="Previous month"
                               >
-                                <ChevronLeft className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                                <ChevronLeft className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
                               </button>
-                              <h3 className="text-xs sm:text-sm font-semibold text-slate-900">{month.title}</h3>
+                              <h3 className="text-[11px] sm:text-xs font-semibold text-slate-900">{month.title}</h3>
                               <button
                                 type="button"
                                 onClick={() => setVisibleMonth((current) => addMonths(current, 1))}
-                                className={`rounded-full border border-slate-200 p-1 sm:px-2 sm:py-2 text-slate-600 transition hover:bg-(--light-blue) text-sm sm:text-base ${monthIndex === 0 ? "invisible" : ""}`}
+                                className={`rounded-full border border-slate-200 p-0.5 sm:p-1 text-slate-600 transition hover:bg-(--light-blue) text-xs sm:text-sm ${monthIndex === 0 ? "invisible" : ""}`}
                                 aria-label="Next month"
                               >
-                                <ChevronRight className="h-3.5 sm:h-4 w-3.5 sm:w-4" />
+                                <ChevronRight className="h-3 sm:h-3.5 w-3 sm:w-3.5" />
                               </button>
                             </div>
 
-                            <div className="grid grid-cols-7 gap-0.5 sm:gap-1 text-center text-xs font-medium text-slate-500">
+                            <div className="grid grid-cols-7 gap-0.5 text-center text-[11px] font-medium text-slate-500">
                               {WEEK_DAYS.map((day) => (
-                                <span key={day} className="py-0.5 sm:py-1 text-xs">
+                                <span key={day} className="py-0.5 text-[10px]">
                                   {day}
                                 </span>
                               ))}
                             </div>
 
-                            <div className="mt-1.5 sm:mt-2 grid grid-cols-7 gap-0.5 sm:gap-1">
+                            <div className="mt-1 grid grid-cols-7 gap-0.5">
                               {month.weeks.flat().map((date, index) => {
                                 if (!date) {
-                                  return <span key={`empty-${index}`} className="h-8 sm:h-10 rounded-lg" />;
+                                  return <span key={`empty-${index}`} className="h-7 sm:h-8 rounded-lg" />;
                                 }
 
                                 const disabled = isPastDate(date, today);
@@ -388,7 +388,7 @@ export default function AIInput() {
                                     type="button"
                                     disabled={disabled}
                                     onClick={() => handleDateClick(date)}
-                                    className={`h-8 sm:h-10 rounded-lg border text-xs sm:text-sm font-medium transition ${
+                                    className={`h-7 sm:h-8 rounded-lg border text-[11px] font-medium transition ${
                                       selectedStart || selectedEnd
                                         ? "border-transparent text-white"
                                         : inRange
@@ -408,22 +408,22 @@ export default function AIInput() {
                         ))}
                       </div>
 
-                      <div className="rounded-lg sm:rounded-2xl border border-slate-200 bg-white px-3 sm:px-4 md:px-5 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
-                        <div className="flex flex-col sm:flex-wrap items-start sm:items-center gap-1 sm:gap-2">
-                          <span className="font-semibold text-slate-900 text-xs sm:text-sm">
+                      <div className="rounded-lg sm:rounded-xl border border-slate-200 bg-white px-3 sm:px-3 md:px-4 py-2 sm:py-2.5 text-[11px] sm:text-xs text-slate-600">
+                        <div className="flex flex-col sm:flex-wrap items-start sm:items-center gap-1 sm:gap-1.5">
+                          <span className="font-semibold text-slate-900 text-[11px] sm:text-xs">
                             {checkIn && checkOut ? `${formatShortDate(checkIn)} – ${formatShortDate(checkOut)}` : "Selected range will appear here"}
                           </span>
                           <span className="text-slate-400 hidden sm:inline">•</span>
-                          <span className="text-xs sm:text-sm">{nights} night{nights === 1 ? "" : "s"}</span>
+                          <span className="text-[11px] sm:text-xs">{nights} night{nights === 1 ? "" : "s"}</span>
                           <span className="text-slate-400 hidden sm:inline">•</span>
-                          <span className="text-xs line-clamp-1">Check-in 15:00, Check-out 11:00</span>
+                          <span className="text-[11px] line-clamp-1">Check-in 15:00, Check-out 11:00</span>
                         </div>
                       </div>
                     </div>
                   ) : null}
 
                   {activePanel === "guests" ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       {[
                         {
                           label: "Rooms",
@@ -450,34 +450,34 @@ export default function AIInput() {
                           onIncrease: () => adjustCount("children", 1),
                         },
                       ].map((item) => (
-                        <div key={item.label} className="rounded-lg sm:rounded-2xl border border-slate-200 px-3 sm:px-4 md:px-5 py-3 sm:py-4">
-                          <div className="flex items-center justify-between gap-2 sm:gap-4">
+                        <div key={item.label} className="rounded-lg sm:rounded-xl border border-slate-200 px-3 sm:px-3 md:px-4 py-2 sm:py-2.5">
+                          <div className="flex items-center justify-between gap-2 sm:gap-3">
                             <div>
-                              <p className="text-xs sm:text-sm font-semibold text-slate-900">{item.label}</p>
-                              <p className="text-xs text-slate-500">
+                              <p className="text-[11px] sm:text-xs font-semibold text-slate-900">{item.label}</p>
+                              <p className="text-[11px] text-slate-500">
                                 {item.label === "Children (0–17 yrs)" ? "Select ages below" : "How many"}
                               </p>
                             </div>
 
-                            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                               <button
                                 type="button"
                                 onClick={item.onDecrease}
                                 disabled={item.value === item.min}
-                                className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-(--light-blue) disabled:cursor-not-allowed disabled:opacity-40"
+                                className="grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-(--light-blue) disabled:cursor-not-allowed disabled:opacity-40"
                                 aria-label={`Decrease ${item.label}`}
                               >
-                                <Minus className="h-3 sm:h-4 w-3 sm:w-4" />
+                                <Minus className="h-2.5 sm:h-3 w-2.5 sm:w-3" />
                               </button>
-                              <span className="min-w-6 sm:min-w-8 text-center text-xs sm:text-sm font-semibold text-slate-900">{item.value}</span>
+                              <span className="min-w-5 sm:min-w-6 text-center text-[11px] sm:text-xs font-semibold text-slate-900">{item.value}</span>
                               <button
                                 type="button"
                                 onClick={item.onIncrease}
                                 disabled={item.value === item.max}
-                                className="grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-(--light-blue) disabled:cursor-not-allowed disabled:opacity-40"
+                                className="grid h-7 w-7 sm:h-8 sm:w-8 place-items-center rounded-full border border-slate-200 text-slate-600 transition hover:bg-(--light-blue) disabled:cursor-not-allowed disabled:opacity-40"
                                 aria-label={`Increase ${item.label}`}
                               >
-                                <Plus className="h-3 sm:h-4 w-3 sm:w-4" />
+                                <Plus className="h-2.5 sm:h-3 w-2.5 sm:w-3" />
                               </button>
                             </div>
                           </div>
@@ -485,15 +485,15 @@ export default function AIInput() {
                       ))}
 
                       {childCount > 0 ? (
-                        <div className="rounded-lg sm:rounded-2xl border border-slate-200 bg-slate-50 px-3 sm:px-4 md:px-5 py-3 sm:py-4">
-                          <p className="text-xs sm:text-sm text-slate-600">
+                        <div className="rounded-lg sm:rounded-xl border border-slate-200 bg-slate-50 px-3 sm:px-3 md:px-4 py-2 sm:py-2.5">
+                          <p className="text-[11px] sm:text-xs text-slate-600">
                             Please select child ages at check-in
                           </p>
 
-                          <div className="mt-3 sm:mt-4 space-y-2 sm:space-y-3">
+                          <div className="mt-2 sm:mt-2.5 space-y-1.5 sm:space-y-2">
                             {childAges.slice(0, childCount).map((age, index) => (
                               <label key={`child-age-${index}`} className="block">
-                                <span className="mb-1 block text-xs sm:text-sm font-medium text-slate-900">
+                                <span className="mb-0.5 block text-[11px] sm:text-xs font-medium text-slate-900">
                                   Child {index + 1} *
                                 </span>
                                 <select
@@ -506,7 +506,7 @@ export default function AIInput() {
                                       return next;
                                     });
                                   }}
-                                  className="w-full rounded-lg sm:rounded-xl border border-slate-200 bg-white px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-slate-900 outline-none transition focus:border-(--blue)"
+                                  className="w-full rounded-lg sm:rounded-lg border border-slate-200 bg-white px-2 sm:px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs text-slate-900 outline-none transition focus:border-(--blue)"
                                 >
                                   {CHILD_AGE_OPTIONS.map((option) => (
                                     <option key={option} value={option}>
@@ -522,18 +522,18 @@ export default function AIInput() {
                     </div>
                   ) : null}
 
-                  <div className="mt-4 sm:mt-6 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 border-t border-slate-200 pt-3 sm:pt-4 sticky bottom-0 bg-white">
+                  <div className="mt-3 sm:mt-4 flex flex-col-reverse sm:flex-row justify-end gap-1.5 sm:gap-2 border-t border-slate-200 pt-2 sm:pt-3 sticky bottom-0 bg-white">
                     <button
                       type="button"
                       onClick={closePanel}
-                      className="rounded-lg sm:rounded-xl border border-slate-200 px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:bg-(--light-blue)"
+                      className="rounded-lg sm:rounded-lg border border-slate-200 px-3 sm:px-3 py-1.5 sm:py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 transition hover:bg-(--light-blue)"
                     >
                       Close
                     </button>
                     <button
                       type="button"
                       onClick={closePanel}
-                      className="inline-flex items-center justify-center gap-2 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-white transition hover:opacity-95 w-full sm:w-auto"
+                      className="inline-flex items-center justify-center gap-2 rounded-lg sm:rounded-lg px-3 sm:px-3 py-1.5 sm:py-1.5 text-[11px] sm:text-xs font-semibold text-white transition hover:opacity-95 w-full sm:w-auto"
                       style={{ backgroundColor: BLUE }}
                     >
                       Save

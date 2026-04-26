@@ -78,7 +78,7 @@ export default function Navbar() {
       </Link>
 
       {/* Center Links - Hidden on mobile, visible on lg */}
-    <div className="hidden lg:flex items-center gap-1 ml-5">
+    <div className="hidden lg:flex items-center gap-1 ml-5 mt-2">
 
         {/* <Link href={routes.destinations} className="text-white font-extralight  text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
           Destinations
@@ -86,21 +86,21 @@ export default function Navbar() {
           {/* <Link href={routes.about} className="text-white font-extralight  text-lg drop-shadow px-4 mx-1 hover:text-gray-200">
           Tours
         </Link> */}
-        <Link href={routes.guides} className="text-white font-extralight text-sm  md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.guides} className="text-white font-extralight text-sm  md:text-[15px] px-3 mx-1 drop-shadow hover:text-gray-200">
           Hosts
         </Link>
-        <Link href={routes.hotels} className="text-white font-extralight text-sm md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.hotels} className="text-white font-extralight text-sm md:text-[15px] px-3 mx-1 drop-shadow hover:text-gray-200">
          Hotels
         </Link>
         {/* <Link href={routes.guides} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
          Rent Car 
         </Link> */}
 
-        <Link href={routes.about} className="text-white font-extralight text-sm md:text-lg drop-shadow px-3 mx-1 hover:text-gray-200">
+        <Link href={routes.about} className="text-white font-extralight text-sm md:text-[15px] drop-shadow px-3 mx-1 hover:text-gray-200">
           About Us
         </Link>
         
-        <Link href={routes.contact} className="text-white font-extralight text-sm md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.contact} className="text-white font-extralight md:text-[15px] md:text-md px-3 mx-1 drop-shadow hover:text-gray-200">
           Contact Us
         </Link>
         
@@ -134,13 +134,13 @@ export default function Navbar() {
           <>
             <Link
               href={routes.login}
-              className="text-white drop-shadow hover:text-gray-200 text-sm sm:text-base"
+              className="text-white drop-shadow hover:text-gray-200 text-sm "
             >
               Login
             </Link>
             <Link
               href={routes.register}
-              className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 drop-shadow text-sm sm:text-base"
+              className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 drop-shadow text-sm "
             >
               Register
             </Link>

@@ -57,7 +57,7 @@ export default function FeaturedHotels() {
     <section className="w-full">
       <div className="mx-auto w-full px-4 py-8 sm:py-12 lg:py-14 sm:px-6 lg:w-[80%] lg:px-0">
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold tracking-tight text-slate-900">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-slate-900">
            Recommended Hotels
           </h2>
           <Link
@@ -91,7 +91,8 @@ export default function FeaturedHotels() {
             <div
               ref={carouselRef}
               onScroll={handleCarouselScroll}
-              className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]"
+              className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth 
+              pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]"
             >
               {hotels.map((hotel) => (
                 <HotelCard key={hotel.id} hotel={hotel} />
