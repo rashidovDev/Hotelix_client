@@ -217,6 +217,7 @@ export default function RoomForm({
             placeholder="e.g., Comfort Room, Deluxe Suite"
             className="mt-1"
             disabled={isLoading}
+            label=""
           />
         </div>
 
@@ -255,6 +256,7 @@ export default function RoomForm({
             min="0"
             className="mt-1"
             disabled={isLoading}
+            label=""
           />
         </div>
 
@@ -272,6 +274,7 @@ export default function RoomForm({
             min="1"
             className="mt-1"
             disabled={isLoading}
+            label=""
           />
         </div>
       </div>
@@ -304,6 +307,7 @@ export default function RoomForm({
             onChange={(e) => setImageInput(e.target.value)}
             placeholder="Enter image URL"
             disabled={isLoading || imageUploading}
+            label=""
           />
           <button
             type="button"
