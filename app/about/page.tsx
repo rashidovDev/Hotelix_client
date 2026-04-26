@@ -8,10 +8,10 @@ import { CheckCircle2, Users, Globe, Award } from "lucide-react";
 export default function AboutPage() {
   return (
     <>
-      <CloudBackground heightClassName="min-h-[50vh]">
+      <CloudBackground heightClassName="min-h-[40vh] sm:min-h-[50vh] lg:min-h-[60vh]">
         <Navbar />
-        <div className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow sm:text-5xl lg:text-6xl">
+        <div className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-white drop-shadow">
             About Hotelix
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-blue-100">
@@ -30,10 +30,10 @@ export default function AboutPage() {
       </div>
 
       {/* Mission Section */}
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2 lg:gap-8 items-center">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Our Mission</h2>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Our Mission</h2>
             <p className="mt-4 text-lg text-slate-600">
               At Hotelix, we believe travel should be seamless, inspiring, and accessible to everyone. Our mission is to empower travelers with tools and insights to discover exceptional accommodations that match their unique preferences and budget.
             </p>
@@ -41,7 +41,7 @@ export default function AboutPage() {
               We connect curious travelers with passionate hosts, creating a global community where experiences matter more than just rooms.
             </p>
           </div>
-          <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-slate-50 p-8 border border-slate-200">
+          <div className="rounded-2xl bg-linear-to-br from-blue-50 to-slate-50 p-8 border border-slate-200">
             <div className="space-y-6">
               {[
                 "Direct connections between travelers and hosts",
@@ -50,7 +50,7 @@ export default function AboutPage() {
                 "24/7 dedicated support"
               ].map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-6 w-6 text-blue-600 shrink-0 mt-0.5" />
                   <span className="text-slate-700 font-medium">{item}</span>
                 </div>
               ))}
@@ -60,9 +60,9 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-12">Our Core Values</h2>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-8 sm:mb-12">Our Core Values</h2>
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[
             {
               icon: Users,
@@ -98,18 +98,18 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-16 sm:px-12 sm:py-20">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">Our Impact</h2>
-          <div className="grid gap-8 md:grid-cols-3">
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <div className="rounded-2xl sm:rounded-3xl bg-linear-to-r from-blue-600 to-blue-700 px-4 py-12 sm:px-12 sm:py-16 md:py-20">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center mb-8 sm:mb-12">Our Impact</h2>
+          <div className="grid gap-6 md:gap-8 md:grid-cols-3">
             {[
               { number: "50K+", label: "Active Properties" },
               { number: "2M+", label: "Happy Travelers" },
               { number: "150+", label: "Countries" }
             ].map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">{stat.number}</div>
-                <div className="text-blue-100">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-sm sm:text-base text-blue-100">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -117,8 +117,8 @@ export default function AboutPage() {
       </section>
 
       {/* Story Section */}
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-8">Our Story</h2>
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-6 sm:mb-8">Our Story</h2>
         <div className="max-w-3xl space-y-6 text-slate-600">
           <p>
             Founded in 2024, Hotelix emerged from a simple observation: traditional hotel booking platforms lacked personality, and travelers deserved better options. We decided to build something different.

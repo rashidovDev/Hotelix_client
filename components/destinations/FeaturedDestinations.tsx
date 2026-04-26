@@ -59,10 +59,10 @@ function DestinationCard({ name, image, className }: (typeof destinations)[numbe
 
 export default function FeaturedDestinations() {
   return (
-    <section className="mx-auto my-10 w-full lg:w-[80%]" style={{ height: 420 }}>
-      <h2 className="mb-4 text-4xl font-bold text-slate-900">Popular destinations</h2>
+    <section className="mx-auto my-6 sm:my-10 w-full px-4 sm:px-6 lg:w-[80%] lg:px-0" style={{ minHeight: 320 }}>
+      <h2 className="mb-4 text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900">Popular destinations</h2>
 
-      <div className="grid h-[calc(100%-2.5rem)] grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2 xl:auto-rows-fr">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-2 xl:auto-rows-fr min-h-[300px] sm:min-h-[350px] lg:min-h-[420px]">
         {destinations.map((destination) => (
           <DestinationCard key={destination.name} {...destination} />
         ))}

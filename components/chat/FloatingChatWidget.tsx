@@ -119,7 +119,7 @@ export default function FloatingChatWidget({
       {isOpen && (
         <div className="fixed bottom-36 right-8 z-50 w-full max-w-sm bg-white rounded-2xl shadow-2xl flex flex-col h-96 animate-in slide-in-from-bottom fade-in duration-300 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center gap-3">
+          <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white px-6 py-4 flex items-center gap-3">
             {hostImage && (
               <img
                 src={hostImage}

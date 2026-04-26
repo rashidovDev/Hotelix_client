@@ -37,13 +37,13 @@ export default function ContactPage() {
 
   return (
     <>
-      <CloudBackground heightClassName="min-h-[50vh]">
+      <CloudBackground heightClassName="min-h-[40vh] sm:min-h-[50vh] lg:min-h-[60vh]">
         <Navbar />
-        <div className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-          <h1 className="text-4xl font-bold tracking-tight text-white drop-shadow sm:text-5xl lg:text-6xl">
+        <div className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold tracking-tight text-white drop-shadow">
             Get in Touch
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-blue-100">
+          <p className="mt-4 max-w-2xl text-sm sm:text-base text-blue-100">
             We'd love to hear from you. Have a question? Reach out to our team anytime.
           </p>
         </div>
@@ -58,10 +58,10 @@ export default function ContactPage() {
         />
       </div>
 
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <div className="grid gap-12 lg:grid-cols-3">
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-3">
           {/* Contact Information */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div>
               <h2 className="text-2xl font-bold text-slate-900 mb-8">Contact Information</h2>
             </div>
@@ -95,7 +95,7 @@ export default function ContactPage() {
               const Icon = item.icon;
               return (
                 <div key={index} className="flex gap-4">
-                  <Icon className="h-6 w-6 text-blue-600 flex-shrink-0 mt-1" />
+                  <Icon className="h-6 w-6 text-blue-600 shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-slate-900">{item.label}</h3>
                     <p className="text-slate-900 mt-1">{item.value}</p>
@@ -108,8 +108,8 @@ export default function ContactPage() {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6">Send us a Message</h2>
 
               {submitted && (
                 <div className="mb-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-4">
@@ -204,9 +204,9 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="mx-auto w-full px-4 py-16 sm:px-6 lg:w-[80%] lg:px-0">
-        <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-12">Frequently Asked Questions</h2>
-        <div className="grid gap-6 md:grid-cols-2">
+      <section className="mx-auto w-full px-4 py-12 sm:py-16 sm:px-6 lg:w-[80%] lg:px-0">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 mb-8 sm:mb-12">Frequently Asked Questions</h2>
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
           {[
             {
               question: "How do I become a host?",

@@ -57,33 +57,33 @@ export default function HotelPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-10xl space-y-8">
-      <div className="flex items-center justify-between rounded-3xl border border-sky-100 bg-linear-to-r from-white via-sky-50 to-cyan-50 px-6 py-6 shadow-sm">
+    <div className="mx-auto w-full max-w-6xl sm:max-w-7xl lg:max-w-10xl space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded-2xl sm:rounded-3xl border border-sky-100 bg-linear-to-r from-white via-sky-50 to-cyan-50 px-4 sm:px-6 py-6 shadow-sm">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">My Hotels</h1>
-          <p className="mt-2 text-sm text-slate-700">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">My Hotels</h1>
+          <p className="mt-2 text-xs sm:text-sm text-slate-700">
             View and manage all your existing hotel listings.
           </p>
         </div>
         {canCreate ? (
           <Link
             href={routes.dashboardHotelsNew}
-            className="rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700"
+            className="rounded-lg sm:rounded-xl bg-sky-600 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-sky-700 mt-4 sm:mt-0"
           >
             Add New Hotel
           </Link>
         ) : null}
       </div>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-        <h2 className="text-xl font-semibold text-slate-900">Hotel List</h2>
+      <section className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 md:p-8 shadow-sm">
+        <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Hotel List</h2>
 
         {hotelsLoading ? (
-          <p className="mt-4 text-sm text-slate-600">Loading hotels...</p>
+          <p className="mt-4 text-xs sm:text-sm text-slate-600">Loading hotels...</p>
         ) : myHotels.length === 0 ? (
-          <p className="mt-4 text-sm text-slate-600">No hotels yet.</p>
+          <p className="mt-4 text-xs sm:text-sm text-slate-600">No hotels yet.</p>
         ) : (
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
             {myHotels.map((hotel) => (
               <article
                 key={hotel.id}
@@ -97,39 +97,39 @@ export default function HotelPage() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-4xl">
+                    <div className="flex h-full w-full items-center justify-center text-3xl sm:text-4xl">
                       🏨
                     </div>
                   )}
                 </div>
 
-                <div className="space-y-2 p-4">
-                  <p className="truncate text-base font-semibold text-slate-900">{hotel.name}</p>
-                  <p className="text-sm text-slate-700">
+                <div className="space-y-2 p-3 sm:p-4">
+                  <p className="truncate text-sm sm:text-base font-semibold text-slate-900">{hotel.name}</p>
+                  <p className="text-xs sm:text-sm text-slate-700">
                     {hotel.city}, {hotel.country}
                   </p>
                   <p className="truncate text-xs text-slate-600">{hotel.location}</p>
 
-                  <div className="flex items-center gap-2 pt-1">
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                  <div className="flex items-center gap-1 sm:gap-2 pt-1 flex-wrap">
+                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
                       {hotel.images?.length ?? 0} images
                     </span>
-                    <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-800">
+                    <span className="rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-800">
                       {hotel.amenities?.length ?? 0} amenities
                     </span>
                   </div>
 
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-2 flex-wrap">
                     <Link
                       href={routes.dashboardHotelRooms(hotel.id)}
-                      className="inline-flex items-center gap-1 rounded-lg border border-sky-300 bg-sky-50 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-100"
+                      className="inline-flex items-center gap-1 rounded-lg border border-sky-300 bg-sky-50 px-2 py-1 text-xs font-semibold text-sky-700 hover:bg-sky-100"
                     >
                       <Settings className="h-3 w-3" />
                       Rooms
                     </Link>
                     <Link
                       href={routes.dashboardHotelEdit(hotel.id)}
-                      className="inline-flex rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50"
+                      className="inline-flex rounded-lg border border-slate-300 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50"
                     >
                       Edit
                     </Link>

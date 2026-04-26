@@ -140,7 +140,7 @@ export default function HotelsPage() {
   return (
     <section className="min-h-screen bg-slate-50">
       <div
-        className="relative min-h-[36vh] overflow-hidden"
+        className="relative min-h-[32vh] sm:min-h-[36vh] lg:min-h-[50vh] overflow-hidden"
         style={{
           backgroundImage: "url('/hotel.jpg')",
           backgroundSize: "cover",
@@ -150,18 +150,18 @@ export default function HotelsPage() {
         <div className="absolute inset-0 bg-slate-950/35" />
         <div className="relative z-10">
           <Navbar />
-          <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-14 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-white drop-shadow sm:text-4xl">
+          <div className="mx-auto w-full max-w-7xl px-4 pb-8 sm:pb-12 lg:pb-16 pt-6 sm:pt-8 lg:pt-14 sm:px-6 lg:px-8">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white drop-shadow">
               {ownerId ? "Host's Hotels" : destination ? `Hotels in ${destination}` : "Hotels"}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm text-sky-50 sm:text-base">
+            <p className="mt-2 max-w-2xl text-xs sm:text-sm text-sky-50">
               Compare stays, filter smarter, and book your perfect city escape.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto w-full px-4 py-6 sm:px-6 sm:py-10 lg:w-[80%] lg:px-8">
+      <div className="mx-auto w-full px-4 py-4 sm:py-6 lg:py-8 sm:px-6 lg:w-[80%] lg:px-8">
         <Breadcrumb
           items={[
             { label: "Home", href: routes.home },
@@ -171,7 +171,7 @@ export default function HotelsPage() {
           className="mb-6"
         />
 
-        <div className="flex flex-col gap-6 md:flex-row">
+        <div className="flex flex-col gap-4 lg:gap-6 lg:flex-row">
           <Sidebar
             destination={draftDestination}
             checkIn={draftCheckIn}

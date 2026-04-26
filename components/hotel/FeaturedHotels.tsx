@@ -55,9 +55,9 @@ export default function FeaturedHotels() {
 
   return (
     <section className="w-full">
-      <div className="mx-auto w-full px-4 py-14 sm:px-6 lg:w-[80%] lg:px-0">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl  font-bold tracking-tight text-slate-900 sm:text-4xl">
+      <div className="mx-auto w-full px-4 py-8 sm:py-12 lg:py-14 sm:px-6 lg:w-[80%] lg:px-0">
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold tracking-tight text-slate-900">
            Recommended Hotels
           </h2>
           <Link

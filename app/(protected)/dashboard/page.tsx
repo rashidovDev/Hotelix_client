@@ -8,34 +8,34 @@ export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Profile Header */}
-      <div className="-mx-8 -mt-8 mb-8">
-        <div className="flex items-center gap-6 bg-gradient-to-r from-blue-500 to-blue-600 rounded-b-3xl p-8 text-white shadow-lg">
-          <div className="relative">
+      <div className="-mx-4 sm:-mx-6 md:-mx-8 md:mx-0 -mt-4 sm:-mt-6 md:-mt-8 md:mt-0 mb-4 sm:mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-linear-to-r from-blue-500 to-blue-600 rounded-b-3xl p-6 sm:p-8 text-white shadow-lg">
+          <div className="relative flex-shrink-0">
             {user?.avatar ? (
               <img
                 src={user.avatar}
                 alt={user.firstName}
-                className="w-24 h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
               />
             ) : (
-              <div className="w-24 h-24 rounded-2xl bg-blue-700 flex items-center justify-center border-4 border-white shadow-lg text-3xl font-bold">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-blue-700 flex items-center justify-center border-4 border-white shadow-lg text-2xl sm:text-3xl font-bold">
                 {user?.firstName?.charAt(0) || "U"}
               </div>
             )}
           </div>
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold">Welcome back, {user?.firstName || "Traveler"}! 👋</h1>
-            <p className="text-blue-100 mt-2 text-lg">Track your bookings, manage reservations, and explore more.</p>
+          <div className="text-center sm:text-left flex-1">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Welcome back, {user?.firstName || "Traveler"}! 👋</h1>
+            <p className="text-blue-100 mt-2 text-sm sm:text-base lg:text-lg">Track your bookings, manage reservations, and explore more.</p>
           </div>
         </div>
       </div>
 
       {/* Statistics Grid */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Your Overview</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Your Overview</h2>
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard
             title="Total Bookings"
             value="12"
@@ -89,8 +89,8 @@ export default function DashboardPage() {
 
       {/* Quick Access Cards */}
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow hover:border-blue-200">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-3 bg-blue-50 rounded-xl">

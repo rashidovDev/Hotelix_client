@@ -69,16 +69,16 @@ export default function Navbar() {
 
   return (
     <>
-    <nav className="w-full mt-2 bg-transparent px-10 py-4 flex items-center justify-between relative z-20">
+    <nav className="w-full mt-2 bg-transparent px-4 sm:px-6 lg:px-10 py-4 flex items-center justify-between relative z-20">
       {/* Logo */}
-      <div className="flex  justify-center">
+      <div className="flex items-center gap-6 flex-1 min-w-0">
 
-      <Link href={routes.home} className="text-3xl font-bold text-white drop-shadow-md">
+      <Link href={routes.home} className="text-2xl sm:text-3xl font-bold text-white drop-shadow-md whitespace-nowrap">
         {siteConfig.name}
       </Link>
 
-      {/* Center Links */}
-    <div className="mt-1.5 ml-5">
+      {/* Center Links - Hidden on mobile, visible on lg */}
+    <div className="hidden lg:flex items-center gap-1 ml-5">
 
         {/* <Link href={routes.destinations} className="text-white font-extralight  text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
           Destinations
@@ -86,21 +86,21 @@ export default function Navbar() {
           {/* <Link href={routes.about} className="text-white font-extralight  text-lg drop-shadow px-4 mx-1 hover:text-gray-200">
           Tours
         </Link> */}
-        <Link href={routes.guides} className="text-white font-extralight  text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.guides} className="text-white font-extralight text-sm  md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
           Hosts
         </Link>
-        <Link href={routes.hotels} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.hotels} className="text-white font-extralight text-sm md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
          Hotels
         </Link>
         {/* <Link href={routes.guides} className="text-white  font-extralight text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
-         Rent Car
+         Rent Car 
         </Link> */}
 
-        <Link href={routes.about} className="text-white font-extralight text-lg drop-shadow px-4 mx-1 hover:text-gray-200">
+        <Link href={routes.about} className="text-white font-extralight text-sm md:text-lg drop-shadow px-3 mx-1 hover:text-gray-200">
           About Us
         </Link>
         
-        <Link href={routes.contact} className="text-white font-extralight  text-lg px-4 mx-1 drop-shadow hover:text-gray-200">
+        <Link href={routes.contact} className="text-white font-extralight text-sm md:text-lg px-3 mx-1 drop-shadow hover:text-gray-200">
           Contact Us
         </Link>
         
@@ -109,7 +109,7 @@ export default function Navbar() {
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center gap-4 transparent  px-7 py-2 rounded-md">
+      <div className="flex items-center gap-2 sm:gap-4 transparent px-3 sm:px-7 py-2 rounded-md">
         {isAuthenticated ? (
           <>
             <button
@@ -134,13 +134,13 @@ export default function Navbar() {
           <>
             <Link
               href={routes.login}
-              className="text-white drop-shadow hover:text-gray-200"
+              className="text-white drop-shadow hover:text-gray-200 text-sm sm:text-base"
             >
               Login
             </Link>
             <Link
               href={routes.register}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 drop-shadow"
+              className="bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 drop-shadow text-sm sm:text-base"
             >
               Register
             </Link>
