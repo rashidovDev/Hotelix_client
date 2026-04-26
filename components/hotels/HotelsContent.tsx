@@ -213,6 +213,5 @@ export default function HotelsContent() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
