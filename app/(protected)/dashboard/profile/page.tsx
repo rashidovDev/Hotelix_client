@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import { GET_ME, GET_MY_BOOKINGS } from "@/lib/graphql/queries";
 import { UPDATE_AVATAR, UPDATE_USER } from "@/lib/graphql/mutations";
 import { useAuthStore } from "@/store/authStore";
-import { UpdateUserInput, UserEntity } from "@/types";
+import { UpdateUserInput, UserEntity, BookingEntity } from "@/types";
 import { format } from "date-fns";
 import BookingCard from "@/components/dashboard/BookingCard";
 
@@ -31,31 +31,8 @@ interface UpdateUserVariables {
   input: UpdateUserInput;
 }
 
-interface Booking {
-  id: string;
-  checkIn: string;
-  checkOut: string;
-  totalPrice: number;
-  status: "CONFIRMED" | "PENDING" | "CANCELLED";
-  createdAt: string;
-  room: {
-    id: string;
-    name: string;
-    type: string;
-    price: number;
-    images?: string[];
-    hotel: {
-      id: string;
-      name: string;
-      city: string;
-      images?: string[];
-      rating?: number;
-    };
-  };
-}
-
 interface MyBookingsResponse {
-  myBookings: Booking[];
+  myBookings: BookingEntity[];
 }
 
 async function uploadToCloudinary(file: File): Promise<string> {
