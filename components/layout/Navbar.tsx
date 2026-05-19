@@ -3,9 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
+import { useNotificationStore } from "@/store/notificationStore";
 import { useAuth } from "@/hooks/useAuth";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { NotificationPanel } from "@/components/notifications/NotificationPanel";
 import {
   CalendarDays,
   Building2,
@@ -14,6 +16,7 @@ import {
   Star,
   User,
   X,
+  Bell,
 } from "lucide-react";
 
 const guestLinks = [
@@ -32,9 +35,26 @@ const hostLinks = [
 ];
 
 export default function Navbar() {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user, isHydrated } = useAuthStore();
+  const { unreadCount } = useNotificationStore();
   const { logout } = useAuth();
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [notificationPanelOpen, setNotificationPanelOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setImageError(false); // Reset image error when user changes
+    setProfileMenuOpen(false);
+    setNotificationPanelOpen(false);
+    // Debug: Check if user has avatar
+    if (user?.avatar) {
+      console.log("User avatar found:", user.avatar);
+    } else {
+      console.log("No user avatar set. Initials:", initials);
+    }
+  }, [user?.id, user?.avatar]);
 
   const links = useMemo(
     () =>
@@ -62,10 +82,21 @@ export default function Navbar() {
   }, [profileMenuOpen]);
 
   useEffect(() => {
-    setProfileMenuOpen(false);
-  }, [user?.id]);
+    if (!notificationPanelOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setNotificationPanelOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [notificationPanelOpen]);
 
   const closeProfileMenu = () => setProfileMenuOpen(false);
+  const closeNotificationPanel = () => setNotificationPanelOpen(false);
 
   return (
     <>
@@ -110,8 +141,32 @@ export default function Navbar() {
 
       {/* Right Side */}
       <div className="flex items-center gap-2 sm:gap-4 transparent px-3 sm:px-7 py-2 rounded-md">
-        {isAuthenticated ? (
+        {mounted && isHydrated && isAuthenticated ? (
           <>
+            {/* Notification Bell */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setNotificationPanelOpen((current) => !current)}
+                className="relative p-2.5 rounded-full border border-white/15 bg-white/10 text-white shadow-sm backdrop-blur-sm transition hover:bg-white/15"
+                aria-label="Notifications"
+                aria-expanded={notificationPanelOpen}
+              >
+                <Bell className="w-5 h-5" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </button>
+              {/* Notification Panel */}
+              <NotificationPanel
+                isOpen={notificationPanelOpen}
+                onClose={closeNotificationPanel}
+              />
+            </div>
+
+            {/* Profile Button */}
             <button
               type="button"
               onClick={() => setProfileMenuOpen((current) => !current)}
@@ -119,14 +174,22 @@ export default function Navbar() {
               aria-haspopup="dialog"
               aria-expanded={profileMenuOpen}
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-900">
-                {initials}
-              </span>
+              {user?.avatar && !imageError ? (
+                <img
+                  src={user.avatar}
+                  alt={`${user?.firstName} ${user?.lastName}`}
+                  className="h-9 w-9 rounded-full object-cover border border-white/20"
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-900">
+                  {initials}
+                </span>
+              )}
               <span className="hidden max-w-36 flex-col leading-tight sm:flex">
                 <span className="truncate text-sm font-medium">
                   {user?.firstName} {user?.lastName}
                 </span>
-                {/* <span className="truncate text-xs text-white/70">Profile menu</span> */}
               </span>
             </button>
           </>
@@ -148,7 +211,7 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-    {isAuthenticated && profileMenuOpen ? (
+    {mounted && isHydrated && isAuthenticated && profileMenuOpen ? (
       <div
         className="fixed inset-0 z-40 flex items-start justify-end bg-slate-950/45 px-4 py-6 backdrop-blur-sm"
         onClick={closeProfileMenu}

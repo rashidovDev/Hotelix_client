@@ -8,6 +8,7 @@ import {
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { SetContextLink } from "@apollo/client/link/context";
 import { ErrorLink } from "@apollo/client/link/error";
+import { useAuthStore } from "@/store/authStore";
 
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:5001/graphql",
@@ -61,7 +62,12 @@ const errorLink = new ErrorLink(({ error, operation, forward }) => {
                       refreshTokens {
                         accessToken
                         user {
-                          id firstName lastName email role
+                          id
+                          firstName
+                          lastName
+                          email
+                          role
+                          avatar
                         }
                       }
                     }`,
@@ -69,12 +75,17 @@ const errorLink = new ErrorLink(({ error, operation, forward }) => {
                 }
               );
 
-              const { data } = await response.json();
+              const result = await response.json();
+              if (result.errors) {
+                throw new Error(result.errors[0]?.message || "Refresh failed");
+              }
+
+              const { data } = result;
               if (!data?.refreshTokens) throw new Error("Refresh failed");
 
               const { accessToken, user } = data.refreshTokens;
 
-              // Update only accessToken in storage
+              // Update localStorage
               const current = JSON.parse(
                 localStorage.getItem("hotelix-auth") || "{}"
               );
@@ -82,6 +93,12 @@ const errorLink = new ErrorLink(({ error, operation, forward }) => {
               current.state.user = user;
               current.state.isAuthenticated = true;
               localStorage.setItem("hotelix-auth", JSON.stringify(current));
+
+              // Update Zustand store to keep in sync
+              if (typeof window !== "undefined") {
+                const authStore = useAuthStore.getState();
+                authStore.setAuth(user, accessToken);
+              }
 
               // Retry original request with new token
               operation.setContext(({ headers = {} }) => ({
@@ -96,17 +113,23 @@ const errorLink = new ErrorLink(({ error, operation, forward }) => {
                 error: observer.error.bind(observer),
                 complete: observer.complete.bind(observer),
               });
-            } catch {
+            } catch (refreshError) {
               // Refresh failed — clear auth and redirect
+              console.error("Token refresh failed:", refreshError);
               localStorage.removeItem("hotelix-auth");
-              window.location.href = "/auth/login";
-              observer.error(new Error("Session expired"));
+              if (typeof window !== "undefined") {
+                const authStore = useAuthStore.getState();
+                authStore.clearAuth();
+                window.location.href = "/auth/login";
+              }
+              observer.error(new Error("Session expired. Please login again."));
             }
           })();
         });
       }
     }
   }
+  return forward(operation);
 });
 
 const client = new ApolloClient({

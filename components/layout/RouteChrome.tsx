@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { useInitializeNotifications } from "@/hooks/useInitializeNotifications";
+import { useRestoreAuthFromCookie } from "@/hooks/useRestoreAuthFromCookie";
 
 interface RouteChromeProps {
   children: React.ReactNode;
@@ -10,6 +12,10 @@ interface RouteChromeProps {
 
 export default function RouteChrome({ children }: RouteChromeProps) {
   const pathname = usePathname();
+  useInitializeNotifications();
+  // Temporarily disabled - may cause page refresh loops
+  // useRestoreAuthFromCookie();
+
   const isAuthRoute = pathname.startsWith("/auth");
   const isDashboardRoute = pathname.startsWith("/dashboard");
   const isHotelsRoute = pathname === "/hotels";

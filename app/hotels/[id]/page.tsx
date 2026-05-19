@@ -61,6 +61,17 @@ const constantRoomCard: RoomItem = {
   price: 129,
 };
 
+function getRandomFollowers(id: string): number {
+  // Create a deterministic random number based on the ID
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    const char = id.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return 3 + (Math.abs(hash) % 8);
+}
+
 const constantHotelReviews: ReviewItem[] = [
   {
     id: "constant-review-1",
@@ -390,47 +401,62 @@ export default function HotelDetailsPage() {
             {hostLoading ? (
               <p className="mt-3 text-sm text-slate-600">Loading host profile...</p>
             ) : host ? (
-              <div className="mt-4  h-min  space-y-4">
-                <div className=" gap-4">
-                  <div className="w-full flex items-center justify-center">
+              <div className="mt-6 h-min">
+                <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                  <div className="relative">
+                    {host.avatar ? (
+                      <img
+                        src={host.avatar}
+                        alt={`${host.firstName} ${host.lastName}`}
+                        className="w-full h-48 object-cover object-center"
+                      />
+                    ) : (
+                      <div className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 text-5xl font-bold text-white">
+                        {host.firstName[0]}
+                        {host.lastName[0]}
+                      </div>
+                    )}
+                    <div className="absolute top-4 right-4 h-6 w-6 rounded-full bg-green-500 border-2 border-white"></div>
+                  </div>
 
-                  {host.avatar ? (
-                    <img
-                      src={host.avatar}
-                      alt={`${host.firstName} ${host.lastName}`}
-                      className="h-42 w-42 rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 text-base font-semibold text-slate-700">
-                      {host.firstName[0]}
-                      {host.lastName[0]}
+                  <div className="p-6 flex flex-col items-center gap-4">
+                    <div className="text-center">
+                      <p className="text-lg font-semibold text-slate-900">
+                        {host.firstName} {host.lastName}
+                      </p>
+                      <p className="text-sm text-slate-500 mt-1">{host.email}</p>
                     </div>
-                  )}
-                  </div>
 
-                  <div>
-                    <p className="text-base font-semibold text-slate-900">
-                      {host.firstName} {host.lastName}
-                    </p>
-                    <p className="text-sm text-slate-600">{host.email}</p>
+                    <div className="flex gap-4 w-full justify-center">
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-slate-900">{getRandomFollowers(host.id)}</p>
+                        <p className="text-xs text-slate-600">Followers</p>
+                      </div>
+                      <div className="w-px bg-slate-200"></div>
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-slate-900">3</p>
+                        <p className="text-xs text-slate-600">Reviews</p>
+                      </div>
+                    </div>
+
+                    <div className="w-full rounded-lg bg-slate-100/50 px-4 py-3 text-center text-sm font-medium text-slate-600">
+                      Host since <span className="font-semibold text-slate-900">{new Date(host.createdAt).getFullYear()}</span>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          window.location.href = '/auth/login';
+                          return;
+                        }
+                        setIsChatOpen(true);
+                      }}
+                      className="w-full text-center p-2 rounded-lg bg-blue-500 hover:bg-blue-700 text-white font-medium transition-colors"
+                    >
+                      Send Message
+                    </button>
                   </div>
                 </div>
-
-                <div className="rounded-xl bg-slate-50 px-4 py-2 text-sm text-slate-600">
-                  Host since {new Date(host.createdAt).getFullYear()}
-                </div>
-                <button 
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      window.location.href = '/auth/login';
-                      return;
-                    }
-                    setIsChatOpen(true);
-                  }}
-                  className="w-full text-center p-2 rounded-lg bg-blue-500 hover:bg-blue-700 text-white font-medium transition-colors"
-                >
-                  Send Message
-                </button>
               </div>
             ) : (
               <p className="mt-3 text-sm text-slate-600">Host information is unavailable.</p>

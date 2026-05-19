@@ -1,11 +1,46 @@
 "use client";
 
 import { Calendar, MapPin, DollarSign, CheckCircle2, Zap, Award, Heart, Clock, BookOpen, CreditCard, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import StatsCard from "@/components/dashboard/StatsCard";
 import { useAuthStore } from "@/store/authStore";
+import { routes } from "@/config/routes";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
+  const isHydrated = useAuthStore((state) => state.isHydrated);
+  const [mounted, setMounted] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  // Security check: if user tries to access dashboard without being logged in, redirect
+  useEffect(() => {
+    if (mounted && isHydrated && !user) {
+      router.replace(routes.login);
+    }
+  }, [mounted, isHydrated, user, router]);
+
+  useEffect(() => {
+    setMounted(true);
+    setImageError(false);
+  }, []);
+
+  useEffect(() => {
+    setImageError(false); // Reset error on user change
+  }, [user?.id]);
+
+  // Show loading while hydrating
+  if (!mounted || !isHydrated || !user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -13,11 +48,12 @@ export default function DashboardPage() {
       <div className="-mx-4 sm:-mx-6 md:-mx-8 md:mx-0 -mt-4 sm:-mt-6 md:-mt-8 md:mt-0 mb-4 sm:mb-6 md:mb-8">
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 bg-linear-to-r from-blue-500 to-blue-600 rounded-b-3xl p-6 sm:p-8 text-white shadow-lg">
           <div className="relative flex-shrink-0">
-            {user?.avatar ? (
+            {user?.avatar && !imageError ? (
               <img
                 src={user.avatar}
                 alt={user.firstName}
                 className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-4 border-white shadow-lg"
+                onError={() => setImageError(true)}
               />
             ) : (
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-blue-700 flex items-center justify-center border-4 border-white shadow-lg text-2xl sm:text-3xl font-bold">
@@ -27,7 +63,8 @@ export default function DashboardPage() {
           </div>
           <div className="text-center sm:text-left flex-1">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Welcome back, {user?.firstName || "Traveler"}! 👋</h1>
-            <p className="text-blue-100 mt-2 text-sm sm:text-base lg:text-lg">Track your bookings, manage reservations, and explore more.</p>
+            <p className="text-blue-100 mt-2 text-sm sm:text-base lg:text-lg">{user?.email}</p>
+            <p className="text-blue-100 mt-1 text-sm sm:text-base lg:text-lg">Track your bookings, manage reservations, and explore more.</p>
           </div>
         </div>
       </div>

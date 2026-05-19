@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore, getAuthFromCookie } from "@/store/authStore";
 import Sidebar from "@/components/dashboard/Sidebar";
 import { routes } from "@/config/routes";
 
@@ -10,14 +10,27 @@ function hasValidAuth(): boolean {
   if (typeof window === "undefined") return false;
   
   try {
+    // Check localStorage for auth data
     const authStorage = localStorage.getItem("hotelix-auth");
-    if (!authStorage) return false;
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      const { state } = parsed;
+      
+      // Valid auth requires: accessToken, user.id, and isAuthenticated flag
+      if (state?.accessToken && state?.user?.id && state?.isAuthenticated === true) {
+        return true;
+      }
+    }
     
-    const parsed = JSON.parse(authStorage);
-    const { state } = parsed;
+    // Fallback: try to restore from cookie
+    const authFromCookie = getAuthFromCookie();
+    if (authFromCookie?.accessToken && authFromCookie?.user?.id) {
+      return true;
+    }
     
-    return !!(state?.accessToken && state?.user?.id && state?.isAuthenticated);
-  } catch {
+    return false;
+  } catch (error) {
+    console.error("Auth validation error:", error);
     return false;
   }
 }
@@ -28,46 +41,48 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { isAuthenticated, isHydrated } = useAuthStore();
   const [isReady, setIsReady] = useState(false);
-  const [hasAuth, setHasAuth] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
-  // Check auth immediately on mount
+  // Check auth only once on mount - block access if not logged in
   useEffect(() => {
-    const validAuth = hasValidAuth();
-    setHasAuth(validAuth);
-    setIsReady(true);
-  }, []);
+    const checkAuthAndAuthorize = () => {
+      const validAuth = hasValidAuth();
+      
+      if (!validAuth) {
+        // User is not authenticated - redirect to login
+        router.replace(routes.login);
+        // Don't set isReady or isAuthorized - return early
+        return;
+      }
+      
+      // User is authenticated - allow access
+      setIsAuthorized(true);
+      setIsReady(true);
+    };
 
-  // Redirect if no auth after mount
-  useEffect(() => {
-    if (!isReady) return;
-    
-    // Use either Zustand state or localStorage check
-    const isUserAuthenticated = isAuthenticated || hasAuth;
-    
-    if (!isUserAuthenticated) {
-      router.push(routes.login);
-    }
-  }, [isReady, isAuthenticated, hasAuth, router]);
+    // Run check on mount
+    checkAuthAndAuthorize();
+  }, []); // Empty dependency - runs only once
 
+  // Show loading state while checking auth
   if (!isReady) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">Checking authorization...</p>
         </div>
       </div>
     );
   }
 
-  const isUserAuthenticated = isAuthenticated || hasAuth;
-
-  if (!isUserAuthenticated) {
+  // If not authorized, don't render anything (redirect already happened)
+  if (!isAuthorized) {
     return null;
   }
 
+  // User is authorized - render the protected content
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex min-h-screen flex-col md:flex-row">

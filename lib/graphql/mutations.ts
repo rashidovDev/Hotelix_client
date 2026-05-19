@@ -11,6 +11,7 @@ export const LOGIN = gql`
         lastName
         email
         role
+        avatar
       }
     }
   }
@@ -26,6 +27,7 @@ export const REGISTER = gql`
         lastName
         email
         role
+        avatar
       }
     }
   }
@@ -41,6 +43,7 @@ export const REFRESH_TOKENS = gql`
         lastName
         email
         role
+        avatar
       }
     }
   }

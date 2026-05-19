@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@apollo/client/react";
-import { Building2, Users } from "lucide-react";
+import { Building2, Users, Heart } from "lucide-react";
 import { routes } from "@/config/routes";
 import { GET_ALL_HOTELS, GET_USER } from "@/lib/graphql/queries";
 import { HotelEntity, UserEntity } from "@/types";
@@ -23,57 +23,97 @@ type HostItem = {
   country: string;
 };
 
+function getRandomFollowers(id: string): number {
+  // Create a deterministic random number based on the ID
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    const char = id.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return 3 + (Math.abs(hash) % 8);
+}
+
 function HostCard({ host }: { host: HostItem }) {
   const { data, loading } = useQuery<GetUserResponse>(GET_USER, {
     variables: { id: host.id },
     fetchPolicy: "cache-first",
   });
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const user = data?.findUser;
   const fullName = user ? `${user.firstName} ${user.lastName}`.trim() : `Host ${host.id.slice(0, 6)}`;
   const initials = `${user?.firstName?.[0] || "H"}${user?.lastName?.[0] || ""}`.trim();
+  const followers = getRandomFollowers(host.id);
+
+  const handleFollow = () => {
+    setIsFollowing(!isFollowing);
+  };
 
   return (
-    <article className="relative group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_50px_-28px_rgba(37,99,235,0.35)] flex flex-col h-full">
-      <div className="relative overflow-hidden bg-linear-to-br from-blue-50 via-white to-slate-50 flex flex-col flex-1">
-        <div className="h-56 w-full flex justify-center items-center overflow-hidden bg-slate-100 sm:h-64">
+    <article className="relative group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_50px_-28px_rgba(37,99,235,0.35)] flex flex-col h-full">
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-slate-50 flex flex-col flex-1">
+        <div className="relative w-full h-64 sm:h-80 overflow-hidden bg-slate-100">
           {loading ? (
-            <div className="h-32 w-32 rounded-full animate-pulse bg-slate-200" />
+            <div className="h-full w-full animate-pulse bg-slate-200" />
           ) : user?.avatar ? (
             <img
               src={user.avatar}
               alt={fullName}
-              className="h-56 w-56 rounded-full object-cover transition duration-500 group-hover:scale-[1.02]"
+              className="w-full h-full object-cover object-center transition duration-500 group-hover:scale-[1.05]"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-slate-900 text-3xl font-bold text-white">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-400 to-blue-600 text-5xl font-bold text-white">
               {initials}
             </div>
           )}
+          <div className="absolute top-4 right-4 h-6 w-6 rounded-full bg-green-500 border-2 border-white"></div>
         </div>
 
-        <div className="flex flex-col flex-1 space-y-4 p-6 sm:p-8">
-          <div className="space-y-2">
+        <div className="flex flex-col flex-1 space-y-3 p-4 sm:p-5">
+          <div className="space-y-1 text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Host</p>
-            <h3 className="text-2xl font-bold text-slate-900">{fullName}</h3>
-            <p className="text-sm text-slate-600">{host.country || "Global host"}</p>
+            <h3 className="text-lg font-bold text-slate-900">{fullName}</h3>
+            <p className="text-xs text-slate-600">{host.country || "Global host"}</p>
           </div>
 
-          <div className="space-y-2 text-sm text-slate-700">
-            <p>
-              <span className="font-semibold text-slate-900">Hotels:</span> {host.hotelCount}
-            </p>
+          <div className="flex gap-3 justify-center w-full">
+            <div className="text-center">
+              <p className="text-lg font-bold text-slate-900">{followers}</p>
+              <p className="text-xs text-slate-600">Followers</p>
+            </div>
+            <div className="w-px bg-slate-200"></div>
+            <div className="text-center">
+              <p className="text-lg font-bold text-slate-900">{host.hotelCount}</p>
+              <p className="text-xs text-slate-600">Hotels</p>
+            </div>
+          </div>
+
+          <div className="space-y-1 text-xs text-slate-700 line-clamp-2">
             <p>
               <span className="font-semibold text-slate-900">Top stay:</span> {host.hotelName || "No hotels yet"}
             </p>
           </div>
 
-          <Link
-            href={`${routes.hotels}?ownerId=${encodeURIComponent(host.id)}`}
-            className="inline-flex bg-blue-500 text-white  items-center justify-center rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold transition hover:bg-blue-700 mt-auto"
-          >
-            See hotels
-          </Link>
+          <div className="flex gap-2 mt-auto">
+            <button
+              onClick={handleFollow}
+              className={`flex-1 items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold transition inline-flex gap-1 ${
+                isFollowing
+                  ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
+                  : "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200"
+              }`}
+            >
+              <Heart className="h-3.5 w-3.5" fill={isFollowing ? "currentColor" : "none"} />
+              {isFollowing ? "Following" : "Follow"}
+            </button>
+            <Link
+              href={`${routes.hotels}?ownerId=${encodeURIComponent(host.id)}`}
+              className="flex-1 bg-blue-500 text-white items-center justify-center rounded-lg px-3 py-2 text-xs font-semibold transition hover:bg-blue-700 inline-flex"
+            >
+              See hotels
+            </Link>
+          </div>
         </div>
       </div>
     </article>
@@ -137,13 +177,13 @@ export default function FeaturedGuides() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, index) => (
               <div key={index} className="h-90 animate-pulse rounded-3xl border border-slate-200 bg-white" />
             ))}
           </div>
         ) : hosts.length ? (
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             {hosts.map((host) => (
               <HostCard key={host.id} host={host} />
             ))}

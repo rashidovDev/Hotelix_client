@@ -23,6 +23,7 @@ export const routes = {
   dashboardHotelsNew: "/dashboard/hotels/new",
   dashboardHotelEdit: (id: string) => `/dashboard/hotels/${id}/edit`,
   dashboardHotelRooms: (id: string) => `/dashboard/hotels/${id}/rooms`,
+  notifications: "/notifications",
 
   // Admin (separate UI)
   admin: "/admin",
